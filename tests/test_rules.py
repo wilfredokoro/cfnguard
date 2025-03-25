@@ -1,25 +1,30 @@
 import subprocess
 import pytest
+import os
 
-TEMPLATE_PATH = "templates/template.yaml"
-RULES_PATH = "rules/s3.guard"
+# Define test cases: (template_path, rule_path, should_pass)
+test_cases = [
+    ("templates/valid_s3.yaml", "rules/s3.guard", True),
+    ("templates/invalid_s3.yaml", "rules/s3.guard", False),
+    ("templates/valid_iam.yaml", "rules/iam.guard", True),
+    # Add more here...
+]
 
-def run_cfn_guard(template_path, rules_path):
-    """Run cfn-guard validate and return (code, stdout, stderr)."""
+@pytest.mark.parametrize("template, rule, expected_success", test_cases)
+def test_template_guard_compliance(template, rule, expected_success):
+    assert os.path.exists(template), f"Template file not found: {template}"
+    assert os.path.exists(rule), f"Guard rule file not found: {rule}"
+
     try:
         result = subprocess.run(
-            ["cfn-guard", "validate", "-r", rules_path, "-d", template_path],
+            ["cfn-guard", "validate", "-r", rule, "-d", template],
             capture_output=True,
             text=True
         )
-        return result.returncode, result.stdout, result.stderr
     except FileNotFoundError:
-        pytest.fail("cfn-guard binary not found. Is it installed and in PATH?")
-    except Exception as e:
-        pytest.fail(f"Error running cfn-guard: {e}")
+        pytest.fail("❌ 'cfn-guard' not found. Make sure it's installed and in PATH.")
 
-def test_template_compliance():
-    """Test that the template passes cfn-guard rules."""
-    code, out, err = run_cfn_guard(TEMPLATE_PATH, RULES_PATH)
-    print("CFN Guard Output:\n", out or err)
-    assert code == 0, f"Template failed validation. Exit code: {code}\n{out or err}"
+    if expected_success:
+        assert result.returncode == 0, f"❌ FAILED: {template} should PASS against {rule}"
+    else:
+        assert result.returncode != 0, f"❌ FAILED: {template} should FAIL against {rule}"
