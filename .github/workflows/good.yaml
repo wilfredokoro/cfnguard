@@ -45,7 +45,15 @@ jobs:
             chmod +x cfn-guard
             sudo mv cfn-guard /usr/local/bin/cfn-guard
     
-
+      - name: Debug workspace files
+        run: |
+            echo "Current directory:"
+            pwd
+            echo "Listing top-level files:"
+            ls -l
+            echo "Listing cfnguard directory:"
+            ls -l cfnguard || echo "cfnguard directory not found"
+          
       
 
       - name: Run cfn-guard tests
