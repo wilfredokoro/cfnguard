@@ -1,0 +1,114 @@
+name: PR workflow handler
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  TestRulesToDev:
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.base.ref == 'development'
+    environment: dev
+    runs-on: Azure-VNET
+    steps:
+      - name: Setup the pipeline
+        uses: SEC-OIT-ACES-ACTIONS/pipeline-setup@main
+        with:
+          aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
+          target_lifecycle: ${{ vars.TARGET_LIFECYCLE }}
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt
+
+      - name: Install cfn-guard
+        run: |
+          curl -sS https://nexus-repo.cicd.prod.it-cuse1.aces.sec.gov/repository/ccoe-sharedservices-raw-dev/cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz -o cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
+          tar -xzf cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
+          sudo mv cfn-guard-v3ll-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/cfn-guard-v3ll
+
+      - name: Run the unit testing script
+        run: |
+          python3 tests.py
+
+  TestRulesToStg:
+    if: |
+      github.event_name == 'pull_request' &&
+      startsWith(github.event.pull_request.base.ref, 'release') == true
+    environment: stg
+    runs-on: Azure-VNET
+    steps:
+      - name: Setup the pipeline
+        uses: SEC-OIT-ACES-ACTIONS/pipeline-setup@main
+        with:
+          aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
+          target_lifecycle: ${{ vars.TARGET_LIFECYCLE }}
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt
+
+      - name: Install cfn-guard
+        run: |
+          curl -sS https://nexus-repo.cicd.prod.it-cuse1.aces.sec.gov/repository/ccoe-sharedservices-raw-dev/cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz -o cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
+          tar -xzf cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
+          sudo mv cfn-guard-v3ll-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/cfn-guard-v3ll
+
+      - name: Run the unit testing script
+        run: |
+          python3 tests.py
+
+  TestRulesToProd:
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.base.ref == 'main'
+    environment: prod
+    runs-on: Azure-VNET
+    steps:
+      - name: Setup the pipeline
+        uses: SEC-OIT-ACES-ACTIONS/pipeline-setup@main
+        with:
+          aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
+          target_lifecycle: ${{ vars.TARGET_LIFECYCLE }}
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt
+
+      - name: Install cfn-guard
+        run: |
+          curl -sS https://nexus-repo.cicd.prod.it-cuse1.aces.sec.gov/repository/ccoe-sharedservices-raw-dev/cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz -o cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
+          tar -xzf cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
+          sudo mv cfn-guard-v3ll-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/cfn-guard-v3ll
+
+      - name: Run the unit testing script
+        run: |
+          python3 tests.py
