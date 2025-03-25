@@ -45,21 +45,17 @@ jobs:
             chmod +x cfn-guard
             sudo mv cfn-guard /usr/local/bin/cfn-guard
     
-      - name: Debug workspace files
-        run: |
-            echo "Current directory:"
-            pwd
-            echo "Listing top-level files:"
-            ls -l
-            echo "Listing cfnguard directory:"
-            ls -l cfnguard || echo "cfnguard directory not found"
+    #   - name: Debug workspace files
+    #     run: |
+    #         echo "Current directory:"
+    #         pwd
+    #         echo "Listing top-level files:"
+    #         ls -l
+    #         echo "Listing cfnguard directory:"
+    #         ls -l cfnguard || echo "cfnguard directory not found"
           
       
 
       - name: Run cfn-guard tests
         run: python /home/runner/work/cfnguard/cfnguard/test.py
-
-    #   - name: Run tests (skip if not present)
-    #     run: |
-    #        if [ -f tests.py ]; then python3 tests.py; else echo "tests.py not found, skipping."; fi
 
