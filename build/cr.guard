@@ -1,21 +1,8 @@
-# Rule Identifier:
-# RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED
-
-# Description:
-# Checks if Aurora MySQL DB clusters are configured to publish audit logs to CloudWatch Logs.
-
-# Reports on:
-# AWS::RDS::DBCluster
-
-# Evaluates:
-# AWS CloudFormation
-
-# Rule Parameters:
-# None
-
 let db_clusters = Resources.*[ Type == "AWS::RDS::DBCluster" ]
 
 rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED when %db_clusters !empty {
-  %db_clusters.Properties.Engine == "aurora-mysql"
-  %db_clusters.Properties.EnableCloudwatchLogsExports contains "audit"
+  %db_clusters all {
+    Properties.Engine == "aurora-mysql"
+    Properties.EnableCloudwatchLogsExports contains "audit"
+  }
 }
