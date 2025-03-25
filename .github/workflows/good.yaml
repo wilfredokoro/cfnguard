@@ -33,11 +33,6 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
 
-      - name: Check rule and test files
-        run: |
-          find cfnguard/rules -type f
-      
-
     #   - name: Install cfn-guard
     #     run: |
     #       curl -sS -L https://github.com/aws-cloudformation/cloudformation-guard/releases/latest/download/cfn-guard-linux -o cfn-guard
