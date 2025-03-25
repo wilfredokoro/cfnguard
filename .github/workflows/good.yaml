@@ -15,11 +15,12 @@ jobs:
         env: [dev, stg, prod]
     environment: ${{ matrix.env }}
     steps:
-      - name: Setup the pipeline
-        uses: SEC-OIT-ACES-ACTIONS/pipeline-setup@main
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
-          target_lifecycle: ${{ vars.TARGET_LIFECYCLE }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -34,9 +35,9 @@ jobs:
 
       - name: Install cfn-guard
         run: |
-          curl -sS https://nexus-repo.cicd.prod.it-cuse1.aces.sec.gov/repository/ccoe-sharedservices-raw-dev/cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz -o cfn-guard.tar.gz
+          curl -sS -L https://github.com/aws-cloudformation/cloudformation-guard/releases/latest/download/cfn-guard-linux.tar.gz -o cfn-guard.tar.gz
           tar -xzf cfn-guard.tar.gz
-          sudo mv cfn-guard-v3ll-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/cfn-guard
+          sudo mv cfn-guard /usr/local/bin/cfn-guard
 
       - name: Run tests
         run: python3 tests.py
