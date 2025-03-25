@@ -35,9 +35,10 @@ jobs:
 
       - name: Install cfn-guard
         run: |
-          curl -sS -L https://github.com/aws-cloudformation/cloudformation-guard/releases/latest/download/cfn-guard-linux.tar.gz -o cfn-guard.tar.gz
-          tar -xzf cfn-guard.tar.gz
+          curl -sS -L https://github.com/aws-cloudformation/cloudformation-guard/releases/latest/download/cfn-guard-linux -o cfn-guard
+          chmod +x cfn-guard
           sudo mv cfn-guard /usr/local/bin/cfn-guard
+      
 
       - name: Run tests
         run: python3 tests.py
