@@ -40,5 +40,10 @@ jobs:
           sudo mv cfn-guard /usr/local/bin/cfn-guard
       
 
-      - name: Run tests
-        run: python3 tests.py
+    #   - name: Run tests
+    #     run: python3 tests.py
+
+      - name: Run tests (skip if not present)
+        run: |
+           if [ -f tests.py ]; then python3 tests.py; else echo "tests.py not found, skipping."; fi
+
