@@ -49,7 +49,7 @@ jobs:
       
 
       - name: Run cfn-guard tests
-        run: python cfnguard/tests.py
+        run: python /Users/wilfredokoro/Documents/Tags/cfnguard/test.py
 
     #   - name: Run tests (skip if not present)
     #     run: |
