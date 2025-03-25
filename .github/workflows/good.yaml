@@ -49,7 +49,7 @@ jobs:
       
 
       - name: Run cfn-guard tests
-        run: python tests.py
+        run: python cfnguard/tests.py
 
     #   - name: Run tests (skip if not present)
     #     run: |
