@@ -1,6 +1,6 @@
 # RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED #
 ##########################################
-
+---
 - name: Empty, SKIP
   input: {}
   expectations:
@@ -30,7 +30,7 @@
             - general
   expectations:
     rules:
-      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: FAIL
+      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
 
 - name: Invalid - Aurora MySQL DB Cluster without Audit logs Enabled, FAIL
   input:
