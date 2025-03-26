@@ -47,7 +47,6 @@ jobs:
             echo "🔍 Fetching latest release..."
             LATEST_RELEASE=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest)
             
-            # Use jq to find the x86_64 Linux binary (matches new naming pattern)
             echo "📦 Finding Linux x86_64 download URL..."
             DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | jq -r '.assets[] | select(.name | test("x86_64-ubuntu-latest.tar.gz$")) | .browser_download_url')
             
@@ -67,12 +66,15 @@ jobs:
             tar -xzf cfn-guard.tar.gz
             
             echo "🚀 Installing to /usr/local/bin/"
-            # The binary is now named 'guard' in newer versions
-            if [ -f "guard" ]; then
-                sudo mv guard /usr/local/bin/cfn-guard
+            # Look for binary in the extracted directory structure
+            if [ -f "cfn-guard-v3-x86_64-ubuntu-latest/cfn-guard" ]; then
+                sudo mv cfn-guard-v3-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/
+                sudo chmod +x /usr/local/bin/cfn-guard
+            elif [ -f "cfn-guard" ]; then
+                sudo mv cfn-guard /usr/local/bin/
                 sudo chmod +x /usr/local/bin/cfn-guard
             else
-                echo "❌ Could not find 'guard' binary in archive"
+                echo "❌ Could not find cfn-guard binary in archive"
                 tar -tf cfn-guard.tar.gz
                 exit 1
             fi
