@@ -39,8 +39,7 @@ jobs:
     #         chmod +x cfn-guard
     #         sudo mv cfn-guard /usr/local/bin/cfn-guard
 
-
-      - name: Install latest cfn-guard
+      - name: Install cfn-guard
         shell: bash
         run: |
             set -e
@@ -53,10 +52,10 @@ jobs:
             echo "📦 Downloading release assets from: $ASSETS_URL"
             curl -s "$ASSETS_URL" > assets.json
         
-            echo "🔍 Searching for Linux tar.gz..."
+            echo "🔍 Searching for Linux x86_64 tar.gz..."
             LATEST=$(cat assets.json \
                 | grep "browser_download_url" \
-                | grep "linux" \
+                | grep "linux-x86_64" \
                 | grep "tar.gz" \
                 | cut -d '"' -f 4)
         
@@ -64,7 +63,7 @@ jobs:
         
             if [ -z "$LATEST" ]; then
                 echo "❌ Failed to find Linux tar.gz asset in release."
-                cat assets.json | head -n 20
+                cat assets.json | grep "name"
                 exit 1
             fi
         
@@ -75,7 +74,7 @@ jobs:
             echo "✅ cfn-guard installed successfully!"
             cfn-guard-validate --version
         
-    
+        
 
       - name: Run cfn-guard tests
         run: python /home/runner/work/cfnguard/cfnguard/test.py
