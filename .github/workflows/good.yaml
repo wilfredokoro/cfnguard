@@ -45,22 +45,26 @@ jobs:
         run: |
             set -e
         
-            echo "Fetching latest cfn-guard release..."
-            curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest > release.json
+            echo "🔍 Fetching release metadata..."
+            ASSETS_URL=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest \
+                | grep "assets_url" \
+                | cut -d '"' -f 4)
         
-            echo "Release JSON preview:"
-            cat release.json | head -n 20
+            echo "📦 Downloading release assets from: $ASSETS_URL"
+            curl -s "$ASSETS_URL" > assets.json
         
-            LATEST=$(cat release.json \
+            echo "🔍 Searching for Linux zip..."
+            LATEST=$(cat assets.json \
                 | grep "browser_download_url" \
                 | grep "linux" \
                 | grep "zip" \
                 | cut -d '"' -f 4)
         
-            echo "Resolved download URL: $LATEST"
+            echo "✅ Resolved download URL: $LATEST"
         
             if [ -z "$LATEST" ]; then
-                echo "❌ Failed to resolve download URL"
+                echo "❌ Failed to find Linux zip asset in release."
+                cat assets.json | head -n 20
                 exit 1
             fi
         
@@ -68,10 +72,8 @@ jobs:
             unzip cfn-guard.zip
             chmod +x cfn-guard
             sudo mv cfn-guard /usr/local/bin/
-            echo "✅ cfn-guard installed!"
+            echo "✅ cfn-guard installed successfully!"
             cfn-guard-validate --version
-        
-
     
     
     
