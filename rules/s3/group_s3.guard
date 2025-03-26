@@ -27,27 +27,27 @@ let db_cluster = Resources.*[ Type == "AWS::RDS::DBCluster" ]
  # when not Metadata.guard.SuppressRules[*] contains 
  # "RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED"
 
-rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED
-when %db_cluster !empty 
-  && %db_cluster.Properties.Engine == "aurora-mysql" 
-  && (%db_cluster.Properties.EngineMode not exists 
-      || %db_cluster.Properties.EngineMode != "serverless") {
+rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED when %db_cluster !empty {
+  when %db_cluster.Properties.Engine == "aurora-mysql" {
+    when %db_cluster.Properties.EngineMode not exists or %db_cluster.Properties.EngineMode != "serverless" {
+      %db_cluster.Properties.EnableCloudwatchLogsExports exists
+   
+      <<
+        Violation: Aurora MySQL DBCluster must have Cloudwatch Logs Exports configured.
+        Fix: Add EnableCloudwatchLogsExports Properties to export audit logs
+      >>
 
-  %db_cluster.Properties.EnableCloudwatchLogsExports exists
-  <<
-    Violation: Aurora MySQL DBCluster must have Cloudwatch Logs Exports configured.
-    Fix: Add EnableCloudwatchLogsExports Properties to export audit logs
-  >>
+      %db_cluster.Properties.EnableCloudwatchLogsExports is_list
+      <<
+        Violation: EnableCloudwatchLogsExports must be a list of logs types
+        Fix: configure EnableCloudwatchLogsExports as a list containing `audit`
+      >>
 
-  %db_cluster.Properties.EnableCloudwatchLogsExports is_list
-  <<
-    Violation: EnableCloudwatchLogsExports must be a list of logs types
-    Fix: configure EnableCloudwatchLogsExports as a list containing `audit`
-  >>
-
-  %db_cluster.Properties.EnableCloudwatchLogsExports[*] == "audit"
-  <<
-    Violation: Aurora MySQL DB cluster must exports audit logs to cloudwatch logs.
-    Fix: Include `audit` in the EnableCloudwatchLogsExports list.
-  >>
+      %db_cluster.Properties.EnableCloudwatchLogsExports[*] == "audit"
+      <<
+        Violation: Aurora MySQL DB cluster must exports audit logs to cloudwatch logs.
+        Fix: Include `audit` in the EnableCloudwatchLogsExports list.
+      >>
+   }
+ }
 }
