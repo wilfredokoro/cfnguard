@@ -47,32 +47,42 @@ jobs:
             echo "🔍 Fetching latest release..."
             LATEST_RELEASE=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest)
             
-            echo "📦 Finding Linux x86_64 download URL..."
-            DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | grep -oP '"browser_download_url": "\K[^"]*linux.*x86_64.*\.tar\.gz')
+            # Use jq if available, otherwise fall back to grep
+            if command -v jq &> /dev/null; then
+                echo "📦 Using jq to parse release data..."
+                DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | jq -r '.assets[] | select(.name | test("linux.*x86_64.*tar.gz")) | .browser_download_url')
+            else
+                echo "📦 Using grep to parse release data..."
+                DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | grep -oP '"browser_download_url": "\K[^"]*linux.*x86_64.*\.tar\.gz[^"]*' | head -1)
+            fi
             
             if [ -z "$DOWNLOAD_URL" ]; then
                 echo "❌ Failed to find Linux download URL"
                 echo "Available assets:"
-                echo "$LATEST_RELEASE" | grep -oP '"name": "\K[^"]*'
+                echo "$LATEST_RELEASE" | grep -oP '"name": "\K[^"]*' || echo "$LATEST_RELEASE"
                 exit 1
             fi
             
             echo "✅ Download URL: $DOWNLOAD_URL"
             
             echo "⬇️ Downloading cfn-guard..."
-            curl -Lo cfn-guard.tar.gz "$DOWNLOAD_URL"
+            curl -L "$DOWNLOAD_URL" -o cfn-guard.tar.gz
             
             echo "📦 Extracting archive..."
             tar -xzf cfn-guard.tar.gz
             
             echo "🚀 Installing to /usr/local/bin/"
-            # Newer versions have the binary named 'guard', older ones 'cfn-guard'
+            # Handle different binary names across versions
             if [ -f "guard" ]; then
-                chmod +x guard
                 sudo mv guard /usr/local/bin/cfn-guard
-            else
-                chmod +x cfn-guard
+                sudo chmod +x /usr/local/bin/cfn-guard
+            elif [ -f "cfn-guard" ]; then
                 sudo mv cfn-guard /usr/local/bin/
+                sudo chmod +x /usr/local/bin/cfn-guard
+            else
+                echo "❌ Could not find binary in archive"
+                tar -tf cfn-guard.tar.gz
+                exit 1
             fi
             
             echo "✅ Installation complete!"
