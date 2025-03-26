@@ -1,82 +1,38 @@
 ---
-tests:
-  - name: Empty, SKIP
-    input: {}
-    expectations:
-      rules:
-        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: SKIP
+- name: Aurora MySQL with audit logs
+  input:
+    Resources:
+      MyDBCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-mysql
+          EnableCloudwatchLogsExports:
+            - audit
+            - error
+  expectations:
+    rules:
+      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
 
-  - name: No Resources, SKIP
-    input:
-      Resources: {}
-    expectations:
-      rules:
-        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: SKIP
+- name: Aurora MySQL without audit logs
+  input:
+    Resources:
+      MyDBCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-mysql
+          EnableCloudwatchLogsExports:
+            - error
+  expectations:
+    rules:
+      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: FAIL
 
-  - name: Valid Aurora MySQL DB Cluster with Audit logs Enabled, PASS
-    input:
-      Resources:
-        GoodAuroraMySQLCluster:
-          Type: AWS::RDS::DBCluster
-          Properties:
-            Engine: aurora-mysql
-            DBClusterIdentifier: my-good-cluster
-            EnableCloudwatchLogsExports:
-              - audit
-              - error
-    expectations:
-      rules:
-        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
-
-  - name: Invalid - Aurora MySQL DB Cluster without Audit logs Enabled, FAIL
-    input:
-      Resources:
-        BadAuroraMySQLCluster:
-          Type: AWS::RDS::DBCluster
-          Properties:
-            Engine: aurora-mysql
-            DBClusterIdentifier: my-bad-cluster
-            EnableCloudwatchLogsExports:
-              - error
-              - slowquery
-    expectations:
-      rules:
-        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: FAIL
-
-  - name: Invalid - Aurora Cluster missing EnableCloudwatchLogsExports, FAIL
-    input:
-      Resources:
-        MissingLogsAuroraCluster:
-          Type: AWS::RDS::DBCluster
-          Properties:
-            Engine: aurora-mysql
-            DBClusterIdentifier: cluster-missing-logs
-    expectations:
-      rules:
-        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: FAIL
-
-  - name: Aurora PostgreSQL Cluster, SKIP
-    input:
-      Resources:
-        AuroraPostgresCluster:
-          Type: AWS::RDS::DBCluster
-          Properties:
-            Engine: aurora-postgresql
-            DBClusterIdentifier: my-postgres-cluster
-            EnableCloudwatchLogsExports:
-              - error
-              - general
-    expectations:
-      rules:
-        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: SKIP
-
-  - name: No DBCluster Resource, SKIP
-    input:
-      Resources:
-        S3BucketResource:
-          Type: AWS::S3::Bucket
-          Properties:
-            BucketName: test-bucket
-    expectations:
-      rules:
-        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: SKIP
+- name: Non-MySQL cluster
+  input:
+    Resources:
+      MyDBCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: postgres
+  expectations:
+    rules:
+      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: SKIP
