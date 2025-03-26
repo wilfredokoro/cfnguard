@@ -38,20 +38,25 @@ jobs:
     #         curl -sSL https://github.com/aws-cloudformation/cloudformation-guard/releases/download/2.1.1/cfn-guard-linux-2.1.1 -o cfn-guard
     #         chmod +x cfn-guard
     #         sudo mv cfn-guard /usr/local/bin/cfn-guard
+
       - name: Install cfn-guard
         shell: bash
         run: |
             LATEST=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest \
-                | grep "browser_download_url" \
-                | grep "linux" \
-                | grep "zip" \
-                | cut -d '"' -f 4)
-        
+            | grep "browser_download_url" \
+            | grep "linux" \
+            | grep "zip" \
+            | cut -d '"' -f 4)
+
+            echo "Downloading from: $LATEST"
+
             curl -Lo cfn-guard.zip "$LATEST"
             unzip cfn-guard.zip
             chmod +x cfn-guard
             sudo mv cfn-guard /usr/local/bin/
             cfn-guard-validate --version
+
+
     
     
     
