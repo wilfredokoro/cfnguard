@@ -43,38 +43,41 @@ jobs:
         shell: bash
         run: |
             set -e
-        
-            echo "🔍 Fetching release metadata..."
-            ASSETS_URL=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest \
-                | grep "assets_url" \
-                | cut -d '"' -f 4)
-        
-            echo "📦 Downloading release assets from: $ASSETS_URL"
-            curl -s "$ASSETS_URL" > assets.json
-        
-            echo "🔍 Searching for Linux x86_64 tar.gz..."
-            LATEST=$(cat assets.json \
-                | grep "browser_download_url" \
-                | grep "linux-x86_64" \
-                | grep "tar.gz" \
-                | cut -d '"' -f 4)
-        
-            echo "✅ Resolved download URL: $LATEST"
-        
-            if [ -z "$LATEST" ]; then
-                echo "❌ Failed to find Linux tar.gz asset in release."
-                cat assets.json | grep "name"
+            
+            echo "🔍 Fetching latest release..."
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest)
+            
+            echo "📦 Finding Linux x86_64 download URL..."
+            DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | grep -oP '"browser_download_url": "\K[^"]*linux.*x86_64.*\.tar\.gz')
+            
+            if [ -z "$DOWNLOAD_URL" ]; then
+                echo "❌ Failed to find Linux download URL"
+                echo "Available assets:"
+                echo "$LATEST_RELEASE" | grep -oP '"name": "\K[^"]*'
                 exit 1
             fi
-        
-            curl -Lo cfn-guard.tar.gz "$LATEST"
+            
+            echo "✅ Download URL: $DOWNLOAD_URL"
+            
+            echo "⬇️ Downloading cfn-guard..."
+            curl -Lo cfn-guard.tar.gz "$DOWNLOAD_URL"
+            
+            echo "📦 Extracting archive..."
             tar -xzf cfn-guard.tar.gz
-            chmod +x cfn-guard
-            sudo mv cfn-guard /usr/local/bin/
-            echo "✅ cfn-guard installed successfully!"
-            cfn-guard-validate --version
-        
-        
+            
+            echo "🚀 Installing to /usr/local/bin/"
+            # Newer versions have the binary named 'guard', older ones 'cfn-guard'
+            if [ -f "guard" ]; then
+                chmod +x guard
+                sudo mv guard /usr/local/bin/cfn-guard
+            else
+                chmod +x cfn-guard
+                sudo mv cfn-guard /usr/local/bin/
+            fi
+            
+            echo "✅ Installation complete!"
+            echo "Installed version:"
+            cfn-guard --version
 
       - name: Run cfn-guard tests
         run: python /home/runner/work/cfnguard/cfnguard/test.py
