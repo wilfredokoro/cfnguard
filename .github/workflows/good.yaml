@@ -47,19 +47,14 @@ jobs:
             echo "🔍 Fetching latest release..."
             LATEST_RELEASE=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest)
             
-            # Use jq if available, otherwise fall back to grep
-            if command -v jq &> /dev/null; then
-                echo "📦 Using jq to parse release data..."
-                DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | jq -r '.assets[] | select(.name | test("linux.*x86_64.*tar.gz")) | .browser_download_url')
-            else
-                echo "📦 Using grep to parse release data..."
-                DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | grep -oP '"browser_download_url": "\K[^"]*linux.*x86_64.*\.tar\.gz[^"]*' | head -1)
-            fi
+            # Use jq to find the x86_64 Linux binary (matches new naming pattern)
+            echo "📦 Finding Linux x86_64 download URL..."
+            DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | jq -r '.assets[] | select(.name | test("x86_64-ubuntu-latest.tar.gz$")) | .browser_download_url')
             
             if [ -z "$DOWNLOAD_URL" ]; then
                 echo "❌ Failed to find Linux download URL"
                 echo "Available assets:"
-                echo "$LATEST_RELEASE" | grep -oP '"name": "\K[^"]*' || echo "$LATEST_RELEASE"
+                echo "$LATEST_RELEASE" | jq -r '.assets[].name'
                 exit 1
             fi
             
@@ -72,15 +67,12 @@ jobs:
             tar -xzf cfn-guard.tar.gz
             
             echo "🚀 Installing to /usr/local/bin/"
-            # Handle different binary names across versions
+            # The binary is now named 'guard' in newer versions
             if [ -f "guard" ]; then
                 sudo mv guard /usr/local/bin/cfn-guard
                 sudo chmod +x /usr/local/bin/cfn-guard
-            elif [ -f "cfn-guard" ]; then
-                sudo mv cfn-guard /usr/local/bin/
-                sudo chmod +x /usr/local/bin/cfn-guard
             else
-                echo "❌ Could not find binary in archive"
+                echo "❌ Could not find 'guard' binary in archive"
                 tar -tf cfn-guard.tar.gz
                 exit 1
             fi
