@@ -33,28 +33,12 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
 
-    #   - name: Install cfn-guard
-    #     run: |
-    #       curl -sS -L https://github.com/aws-cloudformation/cloudformation-guard/releases/latest/download/cfn-guard-linux -o cfn-guard
-    #       chmod +x cfn-guard
-    #       sudo mv cfn-guard /usr/local/bin/cfn-guard
-
       - name: Install cfn-guard
         run: |
             curl -sSL https://github.com/aws-cloudformation/cloudformation-guard/releases/download/2.1.1/cfn-guard-linux-2.1.1 -o cfn-guard
             chmod +x cfn-guard
             sudo mv cfn-guard /usr/local/bin/cfn-guard
     
-    #   - name: Debug workspace files
-    #     run: |
-    #         echo "Current directory:"
-    #         pwd
-    #         echo "Listing top-level files:"
-    #         ls -l
-    #         echo "Listing cfnguard directory:"
-    #         ls -l cfnguard || echo "cfnguard directory not found"
-          
-      
 
       - name: Run cfn-guard tests
         run: python /home/runner/work/cfnguard/cfnguard/test.py
