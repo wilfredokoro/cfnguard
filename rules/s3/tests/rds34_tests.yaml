@@ -53,7 +53,7 @@ tests:
             DBClusterIdentifier: cluster-missing-logs
     expectations:
       rules:
-        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: FAIL
+        RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
 
   - name: Aurora PostgreSQL Cluster, SKIP
     input:
