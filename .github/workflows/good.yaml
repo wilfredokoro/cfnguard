@@ -8,20 +8,21 @@ permissions:
   contents: read
 
 jobs:
-  TestRulesToDev:
-    if: |
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.base.ref == 'development'
-    environment: dev
-    runs-on: Azure-VNET
+  test-rules:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: [dev, stg, prod]
+    environment: ${{ matrix.env }}
     steps:
-      - name: Setup the pipeline
-        uses: SEC-OIT-ACES-ACTIONS/pipeline-setup@main
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
-          target_lifecycle: dev
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-      - name: Setup python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
@@ -30,85 +31,58 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install requirements
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
+
+    #   - name: Install cfn-guard
+    #     run: |
+    #         curl -sSL https://github.com/aws-cloudformation/cloudformation-guard/releases/download/2.1.1/cfn-guard-linux-2.1.1 -o cfn-guard
+    #         chmod +x cfn-guard
+    #         sudo mv cfn-guard /usr/local/bin/cfn-guard
 
       - name: Install cfn-guard
+        shell: bash
         run: |
-          curl -sS https://nexus-repo.cicd.prod.it-cuse1.aces.sec.gov/repository/ccoe-sharedservices-raw-dev/cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz -o cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
-          tar -xzf cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
-          sudo mv cfn-guard-v3ll-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/cfn-guard-v3ll
+            set -e
+            
+            echo "🔍 Fetching latest release..."
+            LATEST_RELEASE=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest)
+            
+            echo "📦 Finding Linux x86_64 download URL..."
+            DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | jq -r '.assets[] | select(.name | test("x86_64-ubuntu-latest.tar.gz$")) | .browser_download_url')
+            
+            if [ -z "$DOWNLOAD_URL" ]; then
+                echo "❌ Failed to find Linux download URL"
+                echo "Available assets:"
+                echo "$LATEST_RELEASE" | jq -r '.assets[].name'
+                exit 1
+            fi
+            
+            echo "✅ Download URL: $DOWNLOAD_URL"
+            
+            echo "⬇️ Downloading cfn-guard..."
+            curl -L "$DOWNLOAD_URL" -o cfn-guard.tar.gz
+            
+            echo "📦 Extracting archive..."
+            tar -xzf cfn-guard.tar.gz
+            
+            echo "🚀 Installing to /usr/local/bin/"
+            # Look for binary in the extracted directory structure
+            if [ -f "cfn-guard-v3-x86_64-ubuntu-latest/cfn-guard" ]; then
+                sudo mv cfn-guard-v3-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/
+                sudo chmod +x /usr/local/bin/cfn-guard
+            elif [ -f "cfn-guard" ]; then
+                sudo mv cfn-guard /usr/local/bin/
+                sudo chmod +x /usr/local/bin/cfn-guard
+            else
+                echo "❌ Could not find cfn-guard binary in archive"
+                tar -tf cfn-guard.tar.gz
+                exit 1
+            fi
+            
+            echo "✅ Installation complete!"
+            echo "Installed version:"
+            cfn-guard --version
 
-      - name: Run the unit testing script
-        run: |
-          python3 tests.py
+      - name: Run cfn-guard tests
+        run: python /home/runner/work/cfnguard/cfnguard/test.py
 
-  TestRulesToStg:
-    if: |
-      github.event_name == 'pull_request' &&
-      startsWith(github.event.pull_request.base.ref, 'release') == true
-    environment: stg
-    runs-on: Azure-VNET
-    steps:
-      - name: Setup the pipeline
-        uses: SEC-OIT-ACES-ACTIONS/pipeline-setup@main
-        with:
-          aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
-          target_lifecycle: ${{ vars.TARGET_LIFECYCLE }}
-
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Checkout the repo
-        uses: actions/checkout@v4
-
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
-
-      - name: Install cfn-guard
-        run: |
-          curl -sS https://nexus-repo.cicd.prod.it-cuse1.aces.sec.gov/repository/ccoe-sharedservices-raw-dev/cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz -o cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
-          tar -xzf cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
-          sudo mv cfn-guard-v3ll-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/cfn-guard-v3ll
-
-      - name: Run the unit testing script
-        run: |
-          python3 tests.py
-
-  TestRulesToProd:
-    if: |
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.base.ref == 'main'
-    environment: prod
-    runs-on: Azure-VNET
-    steps:
-      - name: Setup the pipeline
-        uses: SEC-OIT-ACES-ACTIONS/pipeline-setup@main
-        with:
-          aws_account_id: ${{ vars.AWS_ACCOUNT_ID }}
-          target_lifecycle: ${{ vars.TARGET_LIFECYCLE }}
-
-      - name: Setup python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Checkout the repo
-        uses: actions/checkout@v4
-
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
-
-      - name: Install cfn-guard
-        run: |
-          curl -sS https://nexus-repo.cicd.prod.it-cuse1.aces.sec.gov/repository/ccoe-sharedservices-raw-dev/cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz -o cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
-          tar -xzf cfn-guard-v3ll-x86_64-ubuntu-latest.tar.gz
-          sudo mv cfn-guard-v3ll-x86_64-ubuntu-latest/cfn-guard /usr/local/bin/cfn-guard-v3ll
-
-      - name: Run the unit testing script
-        run: |
-          python3 tests.py
