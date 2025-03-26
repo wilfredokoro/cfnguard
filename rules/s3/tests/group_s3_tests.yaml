@@ -47,7 +47,7 @@
     rules:
       RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: FAIL
 
-- name: Invalid - Aurora MySQL DB Cluster Missing EnableCloudwatchLogsExports, FAIL
+- name: Invalid-Aurora MySQL DB Cluster Missing EnableCloudwatchLogsExports,FAIL
   input:
     Resources:
       MissingLogsAuroraCluster:
