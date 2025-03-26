@@ -1,8 +1,53 @@
-let db_clusters = Resources.*[ Type == "AWS::RDS::DBCluster" ]
+# Rule Identifier:
+#   RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED
+#
+# Description:
+#   Checks if log types exported to Amazon CloudWatch for an Amazon Relational
+#   Database Service (Amazon RDS) DBCluster are enabled.
+#
+# Reports on:
+#   - AWS::RDS::DBCluster
+#
+# Evaluates:
+#   - AWS CloudFormation
+#
+# Rule Parameters:
+#   N/A
+#
+# Scenarios:
+#   a) SKIP: when there are no RDS DBCluster present
+#   b) PASS: when all RDS DBClusters have EnableCloudwatchLogsExports set to true
+#   c) FAIL: when any RDS DBCluster has EnableCloudwatchLogsExports set to false
+#   d) FAIL: when any RDS DBCluster has EnableCloudwatchLogsExports is missing
+#   e) SKIP: when metadata includes an exception to rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED
+#   f) SKIP: when RDS cluster is a aurora serverless
 
-rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED when %db_clusters !empty {
-  %db_clusters all {
-    Properties.Engine == "aurora-mysql"
-    Properties.EnableCloudwatchLogsExports contains "audit"
-  }
+# Select all target resources from incoming template (payload)
+let db_cluster = Resources.*[ Type == "AWS::RDS::DBCluster" ]
+ # when not Metadata.guard.SuppressRules[*] contains 
+ # "RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED"
+
+rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED when %db_cluster !empty {
+  when %db_cluster.Properties.Engine == "aurora-mysql" {
+    when %db_cluster.Properties.EngineMode not exists or %db_cluster.Properties.EngineMode != "serverless" {
+      %db_cluster.Properties.EnableCloudwatchLogsExports exists
+   
+      <<
+        Violation: Aurora MySQL DBCluster must have Cloudwatch Logs Exports configured.
+        Fix: Add EnableCloudwatchLogsExports Properties to export audit logs
+      >>
+
+      %db_cluster.Properties.EnableCloudwatchLogsExports is_list
+      <<
+        Violation: EnableCloudwatchLogsExports must be a list of logs types
+        Fix: configure EnableCloudwatchLogsExports as a list containing `audit`
+      >>
+
+      %db_cluster.Properties.EnableCloudwatchLogsExports[*] == "audit"
+      <<
+        Violation: Aurora MySQL DB cluster must exports audit logs to cloudwatch logs.
+        Fix: Include `audit` in the EnableCloudwatchLogsExports list.
+      >>
+   }
+ }
 }
