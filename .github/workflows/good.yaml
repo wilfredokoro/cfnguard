@@ -39,23 +39,36 @@ jobs:
     #         chmod +x cfn-guard
     #         sudo mv cfn-guard /usr/local/bin/cfn-guard
 
+
       - name: Install latest cfn-guard
         shell: bash
         run: |
             set -e
         
-            LATEST=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest \
+            echo "Fetching latest cfn-guard release..."
+            curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest > release.json
+        
+            echo "Release JSON preview:"
+            cat release.json | head -n 20
+        
+            LATEST=$(cat release.json \
                 | grep "browser_download_url" \
                 | grep "linux" \
                 | grep "zip" \
                 | cut -d '"' -f 4)
         
-            echo "Downloading from: $LATEST"
+            echo "Resolved download URL: $LATEST"
+        
+            if [ -z "$LATEST" ]; then
+                echo "❌ Failed to resolve download URL"
+                exit 1
+            fi
         
             curl -Lo cfn-guard.zip "$LATEST"
             unzip cfn-guard.zip
             chmod +x cfn-guard
             sudo mv cfn-guard /usr/local/bin/
+            echo "✅ cfn-guard installed!"
             cfn-guard-validate --version
         
 
