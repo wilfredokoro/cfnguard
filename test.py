@@ -35,14 +35,12 @@ class RuleTest:
     def rule_file(self) -> str:
         return self._rule_file
 
-
     @property
     def test_file(self) -> str:
-        dir_path, filename = os.path.split(self.rule_file)
-        test_dir = os.path.join(dir_path, "tests")
-        name, ext = os.path.splitext(filename)
-        test_filename = f"{name}_tests{ext}"
-        return os.path.join(test_dir, test_filename)
+        rule_file_parts = self.rule_file.split('/')
+        rule_file_parts[-2] = f"{rule_file_parts[-2]}/tests"
+        test = '/'.join(rule_file_parts)
+        return test.replace('guard', '_tests.yaml')
 
     @property
     def test_cmd(self) -> List:
