@@ -53,29 +53,28 @@ jobs:
             echo "📦 Downloading release assets from: $ASSETS_URL"
             curl -s "$ASSETS_URL" > assets.json
         
-            echo "🔍 Searching for Linux zip..."
+            echo "🔍 Searching for Linux tar.gz..."
             LATEST=$(cat assets.json \
                 | grep "browser_download_url" \
                 | grep "linux" \
-                | grep "zip" \
+                | grep "tar.gz" \
                 | cut -d '"' -f 4)
         
             echo "✅ Resolved download URL: $LATEST"
         
             if [ -z "$LATEST" ]; then
-                echo "❌ Failed to find Linux zip asset in release."
+                echo "❌ Failed to find Linux tar.gz asset in release."
                 cat assets.json | head -n 20
                 exit 1
             fi
         
-            curl -Lo cfn-guard.zip "$LATEST"
-            unzip cfn-guard.zip
+            curl -Lo cfn-guard.tar.gz "$LATEST"
+            tar -xzf cfn-guard.tar.gz
             chmod +x cfn-guard
             sudo mv cfn-guard /usr/local/bin/
             echo "✅ cfn-guard installed successfully!"
             cfn-guard-validate --version
-    
-    
+        
     
 
       - name: Run cfn-guard tests
