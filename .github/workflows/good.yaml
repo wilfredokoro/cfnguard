@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        env: [dev, stg, prod]
+        env: [prod]
     environment: ${{ matrix.env }}
     steps:
       - name: Configure AWS credentials
