@@ -191,6 +191,14 @@ class RuleTest:
     def __init__(self, rule_file: str) -> None:
         self._rule_file = rule_file
         self._guard_binary = self._find_guard_binary()   #---------1
+    
+    @property
+    def test_cmd(self) -> List:
+        guard_path = shutil.which('cfn-guard-validate')
+        if not guard_path:
+            raise FileNotFoundError("cfn-guard-validate binary not found in PATH. Please install CloudFormation Guard CLI.")
+        return [guard_path, 'test', '--rules-file', self.rule_file, '--data-file', self.test_file]
+
 
     def _find_guard_binary(self) -> str:   
         """Find the correct guard binary path"""
