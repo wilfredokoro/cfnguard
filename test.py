@@ -188,19 +188,15 @@ class RuleTest:
     Class to represent a rule and its correlated test
     """
 
+    # def __init__(self, rule_file: str) -> None:
+    #     self._rule_file = rule_file
+
     def __init__(self, rule_file: str) -> None:
         self._rule_file = rule_file
-        self._guard_binary = self._find_guard_binary()   #---------1
-    
-    @property
-    def test_cmd(self) -> List:
-        guard_bin = shutil.which('cfn-guard-validate')
-        if not guard_bin:
-            raise FileNotFoundError("ERROR: 'cfn-guard-validate' not found in PATH. Please install CloudFormation Guard.")
-        return [guard_bin, 'test', '--rules-file', self.rule_file, '--data-file', self.test_file]
-
-
-
+        self._guard_binary = self._find_guard_binary()
+        if not self._guard_binary:
+            raise FileNotFoundError("ERROR: CloudFormation Guard binary not found. Please install cfn-guard.")    
+        
     def _find_guard_binary(self) -> str:   
         """Find the correct guard binary path"""
         # Try different possible binary names and paths
@@ -226,9 +222,15 @@ class RuleTest:
         test = '/'.join(rule_file_parts)
         return test.replace('.guard', '_tests.yaml')
 
+    # @property
+    # def test_cmd(self) -> List:
+    #     return [shutil.which('cfn-guard-validate'), 'test', '--rules-file', self.rule_file, '--data-file', self.test_file]
+
     @property
     def test_cmd(self) -> List:
-        return [shutil.which('cfn-guard-validate'), 'test', '--rules-file', self.rule_file, '--data-file', self.test_file]
+        if not self._guard_binary:
+            raise FileNotFoundError("ERROR: CloudFormation Guard binary not found. Please install cfn-guard.")
+        return [self._guard_binary, 'test', '--rules-file', self.rule_file, '--data-file', self.test_file]
 
     def run(self) -> RuleTestResult:
         """
