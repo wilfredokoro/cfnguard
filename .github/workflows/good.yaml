@@ -38,7 +38,6 @@ jobs:
             curl -sSL https://github.com/aws-cloudformation/cloudformation-guard/releases/download/2.1.1/cfn-guard-linux-2.1.1 -o cfn-guard
             chmod +x cfn-guard
             sudo mv cfn-guard /usr/local/bin/cfn-guard
-            cfn-guard-validate --version
     
 
       - name: Run cfn-guard tests
