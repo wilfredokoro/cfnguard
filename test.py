@@ -40,7 +40,7 @@ class RuleTest:
         rule_file_parts = self.rule_file.split('/')
         rule_file_parts[-2] = f"{rule_file_parts[-2]}/tests"
         test = '/'.join(rule_file_parts)
-        return test.replace('.guard', '_tests.yaml')
+        return test.replace('guard', '_tests.yaml')
 
     @property
     def test_cmd(self) -> List:
