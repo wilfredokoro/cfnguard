@@ -51,6 +51,7 @@ class RuleTest:
         Method to run a cfn-guard test
         :return: A rule test result object
         """
+        print(f"Looking for test file at: {self.test_file}")
         if not os.path.isfile(self.test_file):
             return RuleTestResult(
                 rule_name=self.rule_name,
