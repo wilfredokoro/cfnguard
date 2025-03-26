@@ -190,6 +190,17 @@ class RuleTest:
 
     def __init__(self, rule_file: str) -> None:
         self._rule_file = rule_file
+        self._guard_binary = self._find_guard_binary()   #---------1
+
+    def _find_guard_binary(self) -> str:   
+        """Find the correct guard binary path"""
+        # Try different possible binary names and paths
+        for binary in ['cfn-guard', 'cfn-guard-validate', 'guard']:
+            path = shutil.which(binary)
+            if path:
+                return path
+        # Fallback to direct path if not found in PATH
+        return '/usr/local/bin/cfn-guard'
 
     @property
     def rule_name(self) -> str:
