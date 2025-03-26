@@ -39,6 +39,7 @@ jobs:
     #         chmod +x cfn-guard
     #         sudo mv cfn-guard /usr/local/bin/cfn-guard
       - name: Install cfn-guard
+        shell: bash
         run: |
             LATEST=$(curl -s https://api.github.com/repos/aws-cloudformation/cloudformation-guard/releases/latest \
                 | grep "browser_download_url" \
