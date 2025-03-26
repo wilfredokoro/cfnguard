@@ -30,7 +30,7 @@
             - general
   expectations:
     rules:
-      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
+      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: FAIL
 
 - name: Invalid - Aurora MySQL DB Cluster without Audit logs Enabled, FAIL
   input:
