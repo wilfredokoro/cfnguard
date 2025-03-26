@@ -3,7 +3,7 @@ let rds_instances = Resources.*[ Type == 'AWS::RDS::DBInstance'
     Metadata.guard.SuppressedRules.* != "RDS_AUTOMATIC_MINOR_VERSION UPGRADE_ENABLED"
     ]
 
-rule RDS_AUTOMATIC_MINOR_VERSION UPGRADE ENABLED when rds_instances !empty {
+rule RDS_AUTOMATIC_MINOR_VERSION_UPGRADE_ENABLED when rds_instances !empty {
     %rds_instances.Properties.AutoMinorVersionUpgrade !exists or
     %rds_instances.Properties.AutoMinorVersionUpgrade == true
 
