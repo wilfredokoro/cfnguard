@@ -31,6 +31,7 @@ let rds_instances = Resources.*[ Type == 'AWS::RDS::DBInstance'
 rule RDS_AUTOMATIC_MINOR_VERSION_UPGRADE_ENABLED when rds_instances !empty {
     %rds_instances.Properties.AutoMinorVersionUpgrade !exists or
     %rds_instances.Properties.AutoMinorVersionUpgrade == true
+    
     <<
         Violation: All RDS instances must have automatic minor version upgrade enabled.
         Fix: Set the AutoMinorVersionUpgrade parameter to true.
