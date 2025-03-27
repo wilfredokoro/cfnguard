@@ -1,4 +1,29 @@
-let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance"
+# Rule Identifier:
+#   RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED
+#
+# Description:
+#   Checks if log types exported to Amazon CloudWatch for an Amazon Relational
+#   Database Service (Amazon RDS) DBCluster are enabled.
+#
+# Reports on:
+#   - AWS::RDS::DBCluster
+#
+# Evaluates:
+#   - AWS CloudFormation
+#
+# Rule Parameters:
+#   N/A
+#
+# Scenarios:
+#   a) SKIP: when there are no RDS DBCluster present
+#   b) PASS: when all RDS DBClusters have EnableCloudwatchLogsExports set to true
+#   c) FAIL: when any RDS DBCluster has EnableCloudwatchLogsExports set to false
+#   d) FAIL: when any RDS DBCluster has EnableCloudwatchLogsExports is missing
+#   e) SKIP: when metadata includes an exception to rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED
+#   f) SKIP: when RDS cluster is a aurora serverless
+
+# Select all target resources from incoming template (payload)
+let rds_instances = Resources.*[ Type == 'AWS::RDS::DBInstance'
     Metadata.guard.SuppressedRules not exists or
     Metadata.guard.SuppressedRules.* != "RDS_AUTOMATIC_MINOR_VERSION_UPGRADE_ENABLED"
     ]
