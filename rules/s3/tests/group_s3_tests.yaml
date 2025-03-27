@@ -39,8 +39,8 @@
         Type: AWS::RDS::DBCluster
         Properties:
           Engine: aurora-mysql
+          DBClusterIdentifier: my-good-cluster
           EnableCloudwatchLogsExports:
-            - audit
             - error
             - general
   expectations:
