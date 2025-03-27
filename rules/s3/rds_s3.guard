@@ -1,4 +1,4 @@
-let rds_instances = Resources.*[ Type == 'AWS::RDS::DBInstance'
+let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance"
     Metadata.guard.SuppressedRules not exists or
     Metadata.guard.SuppressedRules.* != "RDS_AUTOMATIC_MINOR_VERSION_UPGRADE_ENABLED"
     ]

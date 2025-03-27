@@ -19,7 +19,7 @@
   input:
     Resources:
       ExampleRDS:
-        Type: 'AWS::RDS::DBInstance'
+        Type: "AWS::RDS::DBInstance"
         Properties:
           DBInstanceClass: !Ref DBInstanceType
           SourceDBInstanceIdentifier: !Ref SourceDBInstanceIdentifier
@@ -37,7 +37,7 @@
   input:
     Resources:
       ExampleRDS:
-        Type: 'AWS::RDS::DBInstance'
+        Type: "AWS::RDS::DBInstance"
         Properties:
           DBInstanceClass: !Ref DBInstanceType
           SourceDBInstanceIdentifier: !Ref SourceDBInstanceIdentifier
@@ -55,7 +55,7 @@
   input:
     Resources:
       ExampleRDS:
-        Type: 'AWS::RDS::DBInstance'
+        Type: AWS::RDS::DBInstance
         Properties:
           DBInstanceClass: !Ref DBInstanceType
           SourceDBInstanceIdentifier: !Ref SourceDBInstanceIdentifier
@@ -69,7 +69,7 @@
   input:
     Resources:
       ExampleRDS:
-        Type: 'AWS::RDS::DBInstance'
+        Type: AWS::RDS::DBInstance
         Metadata:
           guard:
             SuppressedRules:
