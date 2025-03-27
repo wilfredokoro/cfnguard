@@ -21,9 +21,9 @@
         Type: AWS::RDS::DBCluster
         Properties:
           Engine: aurora-mysql
-          DatabaseName: mydb
-          MasterUsername: admin
-          MasterUserPassword: password123
+          #DatabaseName: mydb
+          #MasterUsername: admin
+          #MasterUserPassword: password123
           EnableCloudwatchLogsExports:
             - audit
             - error
