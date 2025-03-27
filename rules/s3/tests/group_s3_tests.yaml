@@ -14,6 +14,24 @@
     rules:
       RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: SKIP
 
+# - name: Valid Aurora MySQL DB Cluster with Audit logs Enabled, PASS
+#   input:
+#     Resources:
+#       GoodAuroraMySQLCluster:
+#         Type: AWS::RDS::DBCluster
+#         Properties:
+#           Engine: aurora-mysql
+#           DatabaseName: mydb
+#           MasterUsername: admin
+#           MasterUserPassword: password123
+#           EnableCloudwatchLogsExports:
+#             - audit
+#             - error
+#             - general
+#   expectations:
+#     rules:
+#       RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
+
 - name: Valid Aurora MySQL DB Cluster with Audit logs Enabled, PASS
   input:
     Resources:
@@ -21,9 +39,6 @@
         Type: AWS::RDS::DBCluster
         Properties:
           Engine: aurora-mysql
-          #DatabaseName: mydb
-          #MasterUsername: admin
-          #MasterUserPassword: password123
           EnableCloudwatchLogsExports:
             - audit
             - error
@@ -31,6 +46,7 @@
   expectations:
     rules:
       RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
+
 
 - name: Invalid - Aurora MySQL DB Cluster without Audit logs Enabled, FAIL
   input:
