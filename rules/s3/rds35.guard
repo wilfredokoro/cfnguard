@@ -1,0 +1,38 @@
+# Rule Identifier:
+# RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED
+
+# Description for rule:
+# checks if automatic minor version upgrade is enabled for an RDS DB clusters
+
+# Reports on:
+#   AWS::RDS::DBCluster
+
+# Evaluates:
+#   AWS CloudFormation
+
+# Rule Parameters:
+#   NA
+
+# Scenarios:
+#   a) SKIP: when there are no RDS DB clusters present
+#   b) PASS: when all RDS DB clusters have AutoMinorVersionUpgrade set to true
+#   c) FAIL: when all RDS DB clusters have AutoMinorVersionUpgrade set to false
+#   d) FAIL: when there are RDS DB clusters with AutoMinorVersionUpgrade property missing
+#   e) SKIP: when metadata includes the suppression for rule RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED
+
+# Select all target resources from incoming template (payload)
+let rds_clusters = Resources.*[ Type == 'AWS::RDS::DBCluster'
+    Metadata.guard.SuppressedRules not exists or 
+    Metadata.guard.SuppressedRules.* != "RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED"
+]
+
+rule RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED when %rds_clusters !empty {
+  %rds_clusters.Properties.AutoMinorVersionUpgrade !exists or
+  %rds_clusters.Properties.AutoMinorVersionUpgrade == true 
+  
+
+  <<
+    Violation: All RDS clusters must have automatic minor version upgrade enabled.
+    Fix: Set the AutoMinorVersionUpgrade parameter to true.
+  >>
+}
