@@ -16,6 +16,22 @@
     rules:
       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: SKIP
 
+# - name: RDS All DB Clusters AutoMinorVersionUpgrade set with value of true, PASS
+#   input:
+#     Resources:
+#       ExampleRDS:
+#         MyDBCluster1:
+#           Type: "AWS::RDS::DBCluster"
+#           Properties:
+#             AutoMinorVersionUpgrade: true
+#         MyDBCluster2:
+#           Type: "AWS::RDS::DBCluster"
+#           Properties:
+#             AutoMinorVersionUpgrade: true
+#   expectations:
+#     rules:
+#       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: PASS
+
 - name: RDS All DB Clusters AutoMinorVersionUpgrade set with value of true, PASS
   input:
     Resources:
@@ -43,7 +59,7 @@
         MyDBCluster2:
           Type: "AWS::RDS::DBCluster"
           Properties:
-            AutoMinorVersionUpgrade: false
+            AutoMinorVersionUpgrade: true
   expectations:
     rules:
       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: FAIL
