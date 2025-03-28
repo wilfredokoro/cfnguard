@@ -34,15 +34,14 @@
 - name: RDS Some DB Clusters AutoMinorVersionUpgrade set with value of false, FAIL
   input:
     Resources:
-      ExampleRDS:
-        MyDBCluster1:
-          Type: "AWS::RDS::DBCluster"
-          Properties:
-            AutoMinorVersionUpgrade: true
-        MyDBCluster2:
-          Type: "AWS::RDS::DBCluster"
-          Properties:
-            AutoMinorVersionUpgrade: true
+      MyDBCluster1:
+        Type: "AWS::RDS::DBCluster"
+        Properties:
+          AutoMinorVersionUpgrade: true
+      MyDBCluster2:
+        Type: "AWS::RDS::DBCluster"
+        Properties:
+          AutoMinorVersionUpgrade: true
   expectations:
     rules:
       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: FAIL
@@ -50,14 +49,13 @@
 - name: RDS DB Clusters AutoMinorVersionUpgrade property missing, FAIL
   input:
     Resources:
-      ExampleRDS:
-        MyDBCluster1:
-          Type: "AWS::RDS::DBCluster"
-          Properties: {}
-        MyDBCluster2:
-          Type: "AWS::RDS::DBCluster"
-          Properties:
-            AutoMinorVersionUpgrade: true
+      MyDBCluster1:
+        Type: "AWS::RDS::DBCluster"
+        Properties: {}
+      MyDBCluster2:
+        Type: "AWS::RDS::DBCluster"
+        Properties:
+          AutoMinorVersionUpgrade: true
   expectations:
     rules:
       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: FAIL
@@ -72,15 +70,14 @@
 - name: RDS DB Clusters AutoMinorVersionUpgrade property missing but rule suppressed, SKIP
   input:
     Resources:
-      ExampleRDS:
-        MyDBCluster1:
-          Type: "AWS::RDS::DBCluster"
-          Properties:
-            AutoMinorVersionUpgrade: false
-          Metadata:
-            guard:
-              SuppressedRules:
-                - "RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED"
+      MyDBCluster1:
+        Type: "AWS::RDS::DBCluster"
+        Properties:
+          AutoMinorVersionUpgrade: false
+        Metadata:
+          guard:
+            SuppressedRules:
+              - "RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED"
   expectations:
     rules:
       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: SKIP
