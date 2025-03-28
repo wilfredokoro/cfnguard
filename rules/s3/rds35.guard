@@ -28,7 +28,8 @@ let rds_clusters = Resources.*[ Type == 'AWS::RDS::DBCluster'
 
 rule RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED when %rds_clusters !empty {
   %rds_clusters.Properties.AutoMinorVersionUpgrade exists or
-  %rds_clusters.Properties.AutoMinorVersionUpgrade == true
+  %rds_clusters.Properties.AutoMinorVersionUpgrade == true or
+  %rds_clusters.Properties.AutoMinorVersionUpgrade == false
 
   <<
     Violation: All RDS clusters must have automatic minor version upgrade enabled.

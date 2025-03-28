@@ -37,7 +37,7 @@
       MyDBCluster1:
         Type: "AWS::RDS::DBCluster"
         Properties:
-          AutoMinorVersionUpgrade: false
+          AutoMinorVersionUpgrade: true
       MyDBCluster2:
         Type: "AWS::RDS::DBCluster"
         Properties:
