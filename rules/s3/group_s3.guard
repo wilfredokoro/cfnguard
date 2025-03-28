@@ -29,10 +29,9 @@ let db_cluster = Resources.*[ Type == "AWS::RDS::DBCluster" ]
 
 rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED when %db_cluster !empty {
   when %db_cluster.Properties.Engine == "aurora-mysql" {
-    # Skip serverless clusters, check all others
-    when (%db_cluster.Properties.EngineMode !exists) or 
-         (%db_cluster.Properties.EngineMode exists and 
-          %db_cluster.Properties.EngineMode != "serverless") {
+    when %db_cluster.Properties.EngineMode !exists or 
+    %db_cluster.Properties.EngineMode != "serverless" {
+      %db_cluster.Properties.EnableCloudwatchLogsExports exists
    
       <<
         Violation: Aurora MySQL DBCluster must have Cloudwatch Logs Exports configured.
