@@ -27,7 +27,7 @@
           EnableCloudwatchLogsExports:
             - audit
             - error
-           # - general
+            - general
   expectations:
     rules:
       RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
