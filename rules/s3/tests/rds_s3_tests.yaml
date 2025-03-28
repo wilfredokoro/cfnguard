@@ -22,7 +22,6 @@
         Type: "AWS::RDS::DBInstance"
         Properties:
           DBInstanceClass: "db.t3.medium" #!Ref DBInstanceType
-          SourceDBInstanceIdentifier: "source-db-instance-id" #!Ref SourceDBInstanceIdentifier
           SourceRegion: "us-east-1" #!Ref SourceRegion
           KmsKeyId: MyKey
           MonitoringInterval: 1
