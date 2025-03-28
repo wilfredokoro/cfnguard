@@ -46,6 +46,21 @@
 #     rules:
 #       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: FAIL
 
+- name: RDS All DB Clusters AutoMinorVersionUpgrade set with value of false, FAIL
+  input:
+    Resources:
+      MyDBCluster1:
+        Type: "AWS::RDS::DBCluster"
+        Properties:
+          AutoMinorVersionUpgrade: false
+      MyDBCluster2:
+        Type: "AWS::RDS::DBCluster"
+        Properties:
+          AutoMinorVersionUpgrade: false
+  expectations:
+    rules:
+      RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: FAIL
+
 - name: RDS DB Clusters AutoMinorVersionUpgrade property missing, FAIL
   input:
     Resources:
