@@ -43,11 +43,10 @@
         MyDBCluster2:
           Type: "AWS::RDS::DBCluster"
           Properties:
-            AutoMinorVersionUpgrade: true
+            AutoMinorVersionUpgrade: false
   expectations:
     rules:
       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: FAIL
-
 
 - name: RDS DB Clusters AutoMinorVersionUpgrade property missing, FAIL
   input:
@@ -86,4 +85,3 @@
   expectations:
     rules:
       RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED: SKIP
-
