@@ -44,7 +44,7 @@ rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED when %db_cluster !empty {
         Fix: configure EnableCloudwatchLogsExports as a list containing `audit`
       >>
 
-      %db_cluster.Properties.EnableCloudwatchLogsExports[*] == "audit"
+      some %db_cluster.Properties.EnableCloudwatchLogsExports[*] == "audit"
       <<
         Violation: Aurora MySQL DB cluster must exports audit logs to cloudwatch logs.
         Fix: Include `audit` in the EnableCloudwatchLogsExports list.
