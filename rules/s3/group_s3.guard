@@ -29,7 +29,7 @@ let db_cluster = Resources.*[ Type == "AWS::RDS::DBCluster" ]
 
 rule RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED when %db_cluster !empty {
   when %db_cluster.Properties.Engine == "aurora-mysql" {
-    when %db_cluster.Properties.EngineMode !exists or 
+    when %db_cluster.Properties.EngineMode not exists or 
     %db_cluster.Properties.EngineMode != "serverless" {
       %db_cluster.Properties.EnableCloudwatchLogsExports exists
    
