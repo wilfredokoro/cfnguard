@@ -21,8 +21,9 @@
       ExampleRDS:
         Type: "AWS::RDS::DBInstance"
         Properties:
-          DBInstanceClass: "db.t3.medium" #!Ref DBInstanceType
-          SourceRegion: "us-east-1" #!Ref SourceRegion
+          DBInstanceClass: db.t3.medium
+          SourceDBInstanceIdentifier: my-source-db-instance
+          SourceRegion: us-east-1
           KmsKeyId: MyKey
           MonitoringInterval: 1
           DeletionProtection: true
