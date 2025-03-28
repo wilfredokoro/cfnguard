@@ -21,9 +21,9 @@
 #   e) SKIP: when metadata includes the suppression for rule RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED
 
 # Select all target resources from incoming template (payload)
-let rds_clusters = Resources.*[ Type == "AWS::RDS::DBCluster"
+let rds_clusters = Resources.*[ Type == 'AWS::RDS::DBCluster'
     Metadata.guard.SuppressedRules not exists or 
-    Metadata.guard.SuppressedRules.* != "RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED")
+    Metadata.guard.SuppressedRules.* != "RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED"
 ]
 
 rule RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED when %rds_clusters !empty {
