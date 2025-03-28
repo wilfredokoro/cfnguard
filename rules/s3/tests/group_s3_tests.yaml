@@ -86,3 +86,18 @@
   expectations:
     rules:
       RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: SKIP
+
+- name: Aurora MySQL DB Cluster with EnableCloudwatchLogsExports, PASS
+  input:
+    Resources:
+      GoodAuroraMySQLCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-mysql
+          EngineMode: "provisioned"
+          DBClusterIdentifier: my-postgres-cluster
+          EnableCloudwatchLogsExports:
+            - audit
+  expectations:
+    rules:
+      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: PASS
