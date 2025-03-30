@@ -24,16 +24,26 @@
 # SKIP when metadata includes the suppression for rule RDS_POSTGRESQL_LOGGING_ENABLED
 
 # Select all target resources from incoming template (payload)
-let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" ]
-    Metadata.guard.SuppressedRules not exists or
-    Metadata.guard.SuppressedRules.* != "RDS_POSTGRESQL_LOGGING_ENABLED"
+
+
+
+let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" 
+    AND (Metadata.guard.SuppressedRules not exists or
+    Metadata.guard.SuppressedRules.* != "RDS_POSTGRESQL_LOGGING_ENABLED") ]
 
 rule RDS_POSTGRESQL_LOGGING_ENABLED when %rds_instances !empty {
     %rds_instances.Properties.Engine == "postgres" {
-        %rds_instances.Properties.EnableCloudWatchLogsExports == "postgresql"
-            <<
-            Violation: Enable only 'postgresql' log export to CloudWatch Logs for PostgreSQL RDS instances.
-            Fix: Set EnableCloudWatchLogsExports to ["postgresql"] in your RDS instance configuration.
-            >>
+        %rds_instances.Properties {
+            EnableCloudWatchLogsExports exists
+                <<
+                Violation: EnableCloudWatchLogsExports property is missing for PostgreSQL RDS instances.
+                Fix: Add EnableCloudWatchLogsExports: ["postgresql"] to your RDS instance configuration.
+                >>
+            EnableCloudWatchLogsExports == ["postgresql"]
+                <<
+                Violation: Enable only 'postgresql' log export to CloudWatch Logs for PostgreSQL RDS instances.
+                Fix: Set EnableCloudWatchLogsExports to ["postgresql"] in your RDS instance configuration.
+                >>
+        }
     }
 }
