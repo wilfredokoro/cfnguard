@@ -1,0 +1,13 @@
+---
+- name: PostgreSQL instances with EnableCloudWatchLogsExports value true, PASS
+  input:
+    Resources:
+      MyDBInstance:
+        Type: AWS::RDS::DBInstance
+        Properties:
+          Engine: postgres
+          EnableCloudWatchLogsExports:
+            - postgresql
+  expectations:
+    rules:
+      RDS_POSTGRESQL_LOGGING_ENABLED: PASS
