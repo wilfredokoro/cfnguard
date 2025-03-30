@@ -5,7 +5,7 @@
   input: {}
   expectations:
     rules:
-      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: SKIP
+      RDS_AURORA_MYSQL_AUDIT_LOGGING_ENABLED: pass
 
 - name: No resources, SKIP
   input:
