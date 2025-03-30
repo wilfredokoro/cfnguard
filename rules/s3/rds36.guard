@@ -27,9 +27,11 @@
 
 
 
-let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" 
-    AND (Metadata.guard.SuppressedRules not exists or
-    Metadata.guard.SuppressedRules.* != "RDS_POSTGRESQL_LOGGING_ENABLED") ]
+
+
+let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" ]
+    Metadata.guard.SuppressedRules not exists or
+    Metadata.guard.SuppressedRules.* != "RDS_POSTGRESQL_LOGGING_ENABLED"
 
 rule RDS_POSTGRESQL_LOGGING_ENABLED when %rds_instances !empty {
     %rds_instances.Properties.Engine == "postgres" {
