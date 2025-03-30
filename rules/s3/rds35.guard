@@ -1,7 +1,7 @@
 # Rule Identifier:
 # RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED
 
-# Description for rule:
+# Description for rule.
 # checks if automatic minor version upgrade is enabled for an RDS DB clusters
 
 # Reports on:
