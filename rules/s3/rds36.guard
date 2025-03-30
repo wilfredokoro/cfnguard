@@ -30,7 +30,7 @@ let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" ]
 
 rule RDS_POSTGRESQL_LOGGING_ENABLED when %rds_instances !empty {
     %rds_instances.Properties.Engine == "postgres" {
-        %rds_instances.Properties.EnableCloudWatchLogsExports == ["postgresql"]
+        %rds_instances.Properties.EnableCloudWatchLogsExports == "postgresql"
             <<
             Violation: Enable only 'postgresql' log export to CloudWatch Logs for PostgreSQL RDS instances.
             Fix: Set EnableCloudWatchLogsExports to ["postgresql"] in your RDS instance configuration.
