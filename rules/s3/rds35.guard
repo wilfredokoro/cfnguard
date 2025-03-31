@@ -30,7 +30,6 @@ rule RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED when %rds_clusters !empty {
   %rds_clusters.Properties.AutoMinorVersionUpgrade !exists or
   %rds_clusters.Properties.AutoMinorVersionUpgrade == true 
   
-
   <<
     Violation: All RDS clusters must have automatic minor version upgrade enabled.
     Fix: Set the AutoMinorVersionUpgrade parameter to true.
