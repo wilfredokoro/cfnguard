@@ -91,7 +91,7 @@
       MyDBInstance:
         Type: AWS::RDS::DBInstance
         Properties:
-          AutoMinorVersionUpgrade: false
+          Engine: postgres
         Metadata:
           guard:
             SuppressedRules:
