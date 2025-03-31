@@ -29,15 +29,10 @@
 
 
 
-# FAIL when there are RDS PostgreSQL instances with EnableCloudWatchLogsExports not exactly equal to ["postgresql"]
-# SKIP when metadata includes the suppression for rule RDS_POSTGRESQL_LOGGING_ENABLED
-
 let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" ]
 
 rule RDS_POSTGRESQL_LOGGING_ENABLED when %rds_instances !empty {
-  not (%rds_instances.Metadata.guard.SuppressedRules exists and 
-       %rds_instances.Metadata.guard.SuppressedRules[*] == "RDS_POSTGRESQL_LOGGING_ENABLED")
-
+  %rds_instances.Metadata.guard.SuppressedRules[*] != "RDS_POSTGRESQL_LOGGING_ENABLED"
   %rds_instances.Properties.Engine == "postgres"
   %rds_instances.Properties.EnableCloudWatchLogsExports == ["postgresql"]
     <<
