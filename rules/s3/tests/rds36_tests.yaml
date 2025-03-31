@@ -25,3 +25,14 @@
   expectations:
     rules:
       RDS_POSTGRESQL_LOGGING_ENABLED: FAIL
+
+- name: PostgreSQL instances with EnableCloudWatchLogsExports property missing, FAIL
+  input:
+    Resources:
+      MyDBInstance:
+        Type: AWS::RDS::DBInstance
+        Properties:
+          Engine: postgres
+  expectations:
+    rules:
+      RDS_POSTGRESQL_LOGGING_ENABLED: FAIL
