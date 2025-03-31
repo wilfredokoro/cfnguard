@@ -30,9 +30,10 @@
 
 
 let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" ]
+    Metadata.guard.SuppressedRules not exists or
+    Metadata.guard.SuppressedRules.* != "RDS_POSTGRESQL_LOGGING_ENABLED"
 
 rule RDS_POSTGRESQL_LOGGING_ENABLED when %rds_instances !empty {
-  %rds_instances.Metadata.guard.SuppressedRules[*] != "RDS_POSTGRESQL_LOGGING_ENABLED"
   %rds_instances.Properties.Engine == "postgres"
   %rds_instances.Properties.EnableCloudWatchLogsExports == ["postgresql"]
     <<
@@ -40,3 +41,4 @@ rule RDS_POSTGRESQL_LOGGING_ENABLED when %rds_instances !empty {
     Fix: Set EnableCloudWatchLogsExports to ["postgresql"] in your RDS instance configuration.
     >>
 }
+
