@@ -31,7 +31,6 @@ let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" ]
 
 rule RDS_POSTGRESQL_LOGGING_ENABLED when %rds_instances !empty {
   %rds_instances.Properties.Engine == "postgres"
-  %rds_instances.Properties.EnableCloudWatchLogsExports !exists or
   %rds_instances.Properties.EnableCloudWatchLogsExports == ["postgresql"]
   
   

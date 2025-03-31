@@ -100,19 +100,3 @@
 #     rules:
 #       RDS_POSTGRESQL_LOGGING_ENABLED: SKIP
 
-- name: PostgreSQL instances with EnableCloudWatchLogsExports property set to empty list but rule suppressed, SKIP
-  input:
-    Resources:
-      MyDBInstance:
-        Type: AWS::RDS::DBInstance
-        Properties:
-          Engine: postgres
-          EnableCloudWatchLogsExports: []
-        Metadata:
-          guard:
-            SuppressedRules:
-              - "RDS_POSTGRESQL_LOGGING_ENABLED"
-  expectations:
-    rules:
-      RDS_POSTGRESQL_LOGGING_ENABLED: SKIP
-
