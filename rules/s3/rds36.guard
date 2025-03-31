@@ -1,0 +1,42 @@
+# Rule Identifier:
+# RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED
+
+# Description for rule.
+# checks if automatic minor version upgrade is enabled for an RDS DB clusters
+
+# Reports on:
+#   AWS::RDS::DBCluster
+
+# Evaluates:
+#   AWS CloudFormation
+
+# Rule Parameters:
+#   NA
+
+# Scenarios:
+#   a) SKIP: when there are no RDS DB clusters present
+#   b) PASS: when all RDS DB clusters have AutoMinorVersionUpgrade set to true
+#   c) FAIL: when all RDS DB clusters have AutoMinorVersionUpgrade set to false
+#   d) FAIL: when there are RDS DB clusters with AutoMinorVersionUpgrade property missing
+#   e) SKIP: when metadata includes the suppression for rule RDS_CLUSTER_AUTO_MINOR_VERSION_UPGRADE_ENABLED
+
+# FAIL when there are RDS PostgreSQL instances with EnableCloudWatchLogsExports not exactly equal to ['postgresql']
+# SKIP when metadata includes the suppression for rule RDS_POSTGRESQL_LOGGING_ENABLED
+
+# Select all target resources from incoming template (payload)
+
+let rds_instances = Resources.*[ Type == "AWS::RDS::DBInstance" ]
+    Metadata.guard.SuppressedRules not exists or
+    Metadata.guard.SuppressedRules.* != "RDS_POSTGRESQL_LOGGING_ENABLED"
+
+rule RDS_POSTGRESQL_LOGGING_ENABLED when %rds_instances !empty {
+  %rds_instances.Properties.Engine == "postgres"
+  %rds_instances.Properties.EnableCloudWatchLogsExports == ["postgresql"]
+  
+  
+    <<
+    Violation: Enable only 'postgresql' log export to CloudWatch Logs for PostgreSQL RDS instances.
+    Fix: Set EnableCloudWatchLogsExports to ["postgresql"] in your RDS instance configuration.
+    >>
+}
+
