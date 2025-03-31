@@ -48,3 +48,39 @@
   expectations:
     rules:
       RDS_POSTGRESQL_LOGGING_ENABLED: FAIL
+
+- name: PostgreSQL instances with EnableCloudWatchLogsExports property set to empty string, FAIL
+  input:
+    Resources:
+      MyDBInstance:
+        Type: AWS::RDS::DBInstance
+        Properties:
+          Engine: postgres
+          EnableCloudWatchLogsExports: ""
+  expectations:
+    rules:
+      RDS_POSTGRESQL_LOGGING_ENABLED: FAIL
+
+- name: PostgreSQL instances with EnableCloudWatchLogsExports property set to null, FAIL
+  input:
+    Resources:
+      MyDBInstance:
+        Type: AWS::RDS::DBInstance
+        Properties:
+          Engine: postgres
+          EnableCloudWatchLogsExports: null
+  expectations:
+    rules:
+      RDS_POSTGRESQL_LOGGING_ENABLED: FAIL
+
+- name: PostgreSQL instances with EnableCloudWatchLogsExports property set to 0, FAIL
+  input:
+    Resources:
+      MyDBInstance:
+        Type: AWS::RDS::DBInstance
+        Properties:
+          Engine: postgres
+          EnableCloudWatchLogsExports: 0
+  expectations:
+    rules:
+      RDS_POSTGRESQL_LOGGING_ENABLED: FAIL
