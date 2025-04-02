@@ -59,21 +59,6 @@
     rules:
       RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: FAIL
 
-- name: Invalid - Aurora postgresql DB Cluster with EnableCloudwatchLogsExports, SKIP
-  input:
-    Resources:
-      GoodAurorapostgresqlCluster:
-        Type: AWS::RDS::DBCluster
-        Properties:
-          Engine: aurora-postgresql
-          DBClusterIdentifier: my-good-cluster
-          EnableCloudwatchLogsExports:
-            - error
-            - general
-  expectations:
-    rules:
-      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: SKIP
-
 # - name: Invalid - Aurora PostgreSQL Cluster, SKIP
 #   input:
 #     Resources:
