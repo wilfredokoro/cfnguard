@@ -29,8 +29,8 @@ let db_cluster = Resources.*[ Type == "AWS::RDS::DBCluster" ]
 
 rule RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED when %db_cluster !empty {
   when %db_cluster.Properties.Engine == "aurora-postgresql" {
-    when %db_cluster.Properties.EngineMode not exists or 
-    %db_cluster.Properties.EngineMode != "serverless" {
+    when %db_cluster.Properties.EngineMode exists and 
+    %db_cluster.Properties.EngineMode == "provisioned" {
       %db_cluster.Properties.EnableCloudwatchLogsExports exists
    
       <<
