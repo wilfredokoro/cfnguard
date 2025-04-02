@@ -65,7 +65,7 @@
       AuroraPostgresCluster:
         Type: AWS::RDS::DBCluster
         Properties:
-          Engine: aurora
+          Engine: aurora-mysql
           DBClusterIdentifier: my-postgres-cluster
           EnableCloudwatchLogsExports:
             - error
