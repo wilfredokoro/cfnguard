@@ -1,0 +1,103 @@
+# RDS_AURORA_postgresql_AUDIT_LOGGING_ENABLED #
+##########################################
+---
+- name: Empty, SKIP
+  input: {}
+  expectations:
+    rules:
+      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: SKIP
+
+- name: No resources, SKIP
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: SKIP
+
+- name: Valid Aurora postgresql DB Cluster with Audit logs Enabled, PASS
+  input:
+    Resources:
+      GoodAurorapostgresqlCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-postgresql
+          DatabaseName: mydb
+          MasterUsername: admin
+          MasterUserPassword: password123
+          EnableCloudwatchLogsExports:
+            - audit
+            - error
+            - general
+  expectations:
+    rules:
+      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: PASS
+
+- name: Invalid - Aurora postgresql DB Cluster without Audit logs Enabled, FAIL
+  input:
+    Resources:
+      GoodAurorapostgresqlCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-postgresql
+          DBClusterIdentifier: my-good-cluster
+          EnableCloudwatchLogsExports:
+            - error
+            - general
+  expectations:
+    rules:
+      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: FAIL
+
+- name: Invalid-Aurora postgresql DB Cluster Missing EnableCloudwatchLogsExports,FAIL
+  input:
+    Resources:
+      MissingLogsAuroraCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-postgresql
+          DBClusterIdentifier: cluster-missing-logs
+  expectations:
+    rules:
+      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: FAIL
+
+- name: Invalid - Aurora PostgreSQL Cluster, SKIP
+  input:
+    Resources:
+      AuroraPostgresCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-postgresql
+          DBClusterIdentifier: my-postgres-cluster
+          EnableCloudwatchLogsExports:
+            - error
+            - general
+  expectations:
+    rules:
+      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: SKIP
+
+- name: Invalid - Aurora Serverless Cluster, SKIP
+  input:
+    Resources:
+      MyDBCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-postgresql
+          DBClusterIdentifier: my-postgres-cluster
+          EngineMode: serverless
+  expectations:
+    rules:
+      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: SKIP
+
+- name: Aurora postgresql DB Cluster with EnableCloudwatchLogsExports, PASS
+  input:
+    Resources:
+      GoodAurorapostgresqlCluster:
+        Type: AWS::RDS::DBCluster
+        Properties:
+          Engine: aurora-postgresql
+          EngineMode: "provisioned"
+          DBClusterIdentifier: my-postgres-cluster
+          EnableCloudwatchLogsExports:
+            - audit
+  expectations:
+    rules:
+      RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: PASS
