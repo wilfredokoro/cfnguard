@@ -74,7 +74,7 @@
 #     rules:
 #       RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: SKIP
 
-- name: Non-provisioned Aurora PostgreSQL Cluster, SKIP
+- name: Aurora PostgreSQL Cluster with Default EngineMode, SKIP
   input:
     Resources:
       AuroraPostgresCluster:
@@ -82,8 +82,8 @@
         Properties:
           Engine: aurora-postgresql
           DBClusterIdentifier: my-postgres-cluster
-          # Missing EngineMode: "provisioned" property
-          EnableCloudWatchLogsExports:
+          # Default EngineMode is "provisioned" when omitted, but we still test explicitly
+          EnableCloudwatchLogsExports:
             - error
             - general
   expectations:
