@@ -84,11 +84,14 @@
           DBClusterIdentifier: my-postgres-cluster
           # Missing EngineMode: "provisioned" property
           EnableCloudwatchLogsExports:
-            - error
-            - general
+            # - error
+            # - general
+            - audit
   expectations:
     rules:
       RDS_AURORA_POSTGRESQL_AUDIT_LOGGING_ENABLED: SKIP
+
+  
 
 - name: Invalid - Aurora Serverless Cluster, SKIP
   input:
