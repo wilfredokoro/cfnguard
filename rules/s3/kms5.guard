@@ -1,26 +1,21 @@
-# KMS.5: KMS keys should not be publicly accessible
+# KMS.5: KMS keys should not be
+# publicly accessible
 
 let resource_type = "AWS::KMS::Key"
 
-rule kms_key_public_access {
-    Resources.* {
-        Type == resource_type
+rule KMS_KEY_PUBLIC_ACCESS when resource_type
+{
+    Resources.* Type == resource_type {
         Properties.KeyPolicy.Statement[*] {
-            Effect == "Allow"
-            (Principal == "*" or Principal.AWS == "*")
-            (
-                Action == "kms:Encrypt" or 
-                Action == "kms:Decrypt" or 
-                Action == "kms:ReEncrypt*" or 
-                Action == "kms:GenerateDataKey*" or
-                Action == "*" or
-                Action[*] == "kms:Encrypt" or 
-                Action[*] == "kms:Decrypt" or 
-                Action[*] == "kms:ReEncrypt*" or 
-                Action[*] == "kms:GenerateDataKey*" or
-                Action[*] == "*"
-            )
+            Effect == "Allow" and Principal ==
+            "*" and Action[*] == "kms:Encrypt" or
+            Action[*] == "kms:Decrypt"
         }
-        << report(message="KMS key '${Name}' should not be publicly accessible.", status="FAIL")
+        << 
+        report(message="KMS key '${Name}'
+        should not be publicly accessible.",
+        status="FAIL")
+        >>
     }
 }
+#rules/s3/tests/kms6.guard
