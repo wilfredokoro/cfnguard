@@ -14,4 +14,4 @@ rule kms_key_public_access {
             status: FAIL
         )
     }
-}
+
