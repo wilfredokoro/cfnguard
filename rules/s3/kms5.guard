@@ -1,29 +1,35 @@
-fragment .* Type == resource_type {
-    # Check for public access with wildcard principal and sensitive actions
-    when Properties.KeyPolicy.Statement[*] {
-        Effect == "Allow" and 
-        (Principal == "*" or Principal.AWS == "*") and 
-        (
-            Action == "kms:Encrypt" or 
-            Action == "kms:Decrypt" or 
-            Action == "kms:ReEncrypt*" or 
-            Action == "kms:GenerateDataKey*" or
-            Action[*] == "kms:Encrypt" or 
-            Action[*] == "kms:Decrypt" or 
-            Action[*] == "kms:ReEncrypt*" or 
-            Action[*] == "kms:GenerateDataKey*" or
-            Action == "*" or
-            Action[*] == "*"
-        )
-    } {
-        << report(
-            message: "KMS key '${Name}' should not be publicly accessible.",
-            status: "FAIL"
-        )
-    } else {
-        << report(
-            message: "KMS key '${Name}' does not allow public access to sensitive operations.",
-            status: "PASS"
-        )
+rule check_kms_public_access {
+    AWS::KMS::Key {
+        # Check for public access with wildcard principal and sensitive actions
+        when Properties.KeyPolicy.Statement[*] {
+            Effect == "Allow" and 
+            (Principal == "*" or Principal.AWS == "*") and 
+            (
+                Action == "kms:Encrypt" or 
+                Action == "kms:Decrypt" or 
+                Action == "kms:ReEncrypt*" or 
+                Action == "kms:GenerateDataKey*" or
+                Action[*] == "kms:Encrypt" or 
+                Action[*] == "kms:Decrypt" or 
+                Action[*] == "kms:ReEncrypt*" or 
+                Action[*] == "kms:GenerateDataKey*" or
+                Action == "*" or
+                Action[*] == "*"
+            )
+        } {
+            <<[
+                report(
+                    message: "KMS key '${Name}' should not be publicly accessible.",
+                    status: "FAIL"
+                )
+            ]>>
+        } else {
+            <<[
+                report(
+                    message: "KMS key '${Name}' does not allow public access to sensitive operations.",
+                    status: "PASS"
+                )
+            ]>>
+        }
     }
 }
