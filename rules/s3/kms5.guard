@@ -6,7 +6,7 @@ rule KMS_KEY_PUBLIC_ACCESS {
         Properties.KeyPolicy.Statement[*] {
             Effect == "Allow"
             Principal == "*"
-            (Action[*] == "kms:Encrypt" or Action[*] == "kms:Decrypt")
+            Action[*] == "kms:Encrypt"
         }
         report(
             message: "KMS key '${Name}' should not be publicly accessible.",
@@ -14,3 +14,19 @@ rule KMS_KEY_PUBLIC_ACCESS {
         )
     }
 }
+
+rule KMS_KEY_PUBLIC_ACCESS_DECRYPT {
+    Resources.* {
+        Type == "AWS::KMS::Key"
+        Properties.KeyPolicy.Statement[*] {
+            Effect == "Allow"
+            Principal == "*"
+            Action[*] == "kms:Decrypt"
+        }
+        report(
+            message: "KMS key '${Name}' should not be publicly accessible.",
+            status: FAIL
+        )
+    }
+}
+
