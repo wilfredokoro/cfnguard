@@ -64,6 +64,37 @@
   expectations:
     rules:
       KMS_KEY_PUBLIC_ACCESS: PASS
+  input:
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:Encrypt
+                  - kms:Decrypt
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:Encrypt
+                  - kms:Decrypt
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: FAIL
 
 - name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
   input:
