@@ -3,8 +3,8 @@ let resource_type = "AWS::KMS::Key"
 rule kms_key_public_access when resource_type {
   Resources.*[ Type == resource_type ] {
     Properties.KeyPolicy.Statement[*] {
-      when Effect == "Allow" {
-        when Principal == "*" {
+      Effect == "Allow" {
+        Principal == "*" {
           %not {
             Action[*] like /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
           }
