@@ -1,19 +1,20 @@
-let resource_type = Resources.*[ Type == 'AWS::KMS::Key' ]
+let resource_type = Resources.*[Type == 'AWS::KMS::Key']
 
 rule KMS_KEY_PUBLIC_ACCESS when %resource_type !empty {
   resource_type.Properties.KeyPolicy.Statement[*] {
     Effect == "Allow"
     Principal == "*"
-    Action[*] == /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
-   <<
-    Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
-    Severity: HIGH
-   >>
-  
-  }
-
-
- 
-}
-
+    Action[*] == "kms:Encrypt" or
+    Action[*] == "kms:Decrypt" or
+    Action[*] == "kms:ReEncrypt*" or
+    Action[*] == "kms:GenerateDataKey*" or
+    Action[*] == "kms:CreateGrant" or
+    Action[*] == "kms:ScheduleKeyDeletion" or
+    Action[*] == "kms:PutKeyPolicy"
     
+    <<
+      Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
+      Severity: HIGH
+    >>
+  }
+}
