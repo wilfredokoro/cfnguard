@@ -1,16 +1,15 @@
 # KMS.5: KMS keys should not be publicly accessible
 
 rule kms_key_public_access {
-    Resources.* {
-        Type == "AWS::KMS::Key"
-        Properties.KeyPolicy.Statement[*] {
-            Effect == "Allow"
-            Principal == "*"
-            Action[*] == "kms:Encrypt" or Action[*] == "kms:Decrypt"
-        }
-        report(
-            message: "KMS key '${Name}' should not be publicly accessible.",
-            status: FAIL
-        )
-    }
+    Resources.* [
+        Type == "AWS::KMS::Key",
+        Properties.KeyPolicy.Statement[*].Effect == "Allow",
+        Properties.KeyPolicy.Statement[*].Principal == "*",
+        Properties.KeyPolicy.Statement[*].Action[*] == "kms:Encrypt" or
+        Properties.KeyPolicy.Statement[*].Action[*] == "kms:Decrypt"
+    ]
+    report(
+        message: "KMS key '${Name}' should not be publicly accessible.",
+        status: FAIL
+    )
 }
