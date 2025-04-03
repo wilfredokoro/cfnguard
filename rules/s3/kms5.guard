@@ -1,5 +1,7 @@
-rule kms_key_should_not_allow_wildcard_principal {
-  AWS::KMS::Key Properties.KeyPolicy.Statement[*] {
+let resource_type = AWS::KMS::Key
+
+rule KMS_KEY_PUBLIC_ACCESS {
+  resource_type Properties.KeyPolicy.Statement[*] {
     Effect == "Allow"
     Principal == "*"
     Action[*] != /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
