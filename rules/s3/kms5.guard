@@ -1,14 +1,12 @@
-let resource_type = "AWS::KMS::Key"
-
-rule kms_key_public_access when resource_type {
-  Resources.*[ Type == resource_type ].Properties.KeyPolicy.Statement[*] {
+rule kms_key_should_not_allow_wildcard_principal {
+  AWS::KMS::Key Properties.KeyPolicy.Statement[*] {
     Effect == "Allow"
     Principal == "*"
-    %not {
-      Action[*] like /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
-    }
+    Action[*] != /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
   }
-} <<
+}
+
+<<
   Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
   Severity: HIGH
 >>
