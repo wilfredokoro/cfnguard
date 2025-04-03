@@ -1,21 +1,38 @@
+# Rule to ensure KMS keys are not publicly accessible
+# This rule checks that KMS key policies don't allow wildcard principals
+# which could make the key accessible to anyone
 rule KMSKeyShouldNotBePublic when resource is AWS::KMS::Key {
+  # First verify the policy exists
+  properties.KeyPolicy exists
+  properties.KeyPolicy.Statement exists
+  
   let statements = properties.KeyPolicy.Statement
   %statements ALL {
     %context = $
     
     # Check if wildcard "*" is not used in Principal.AWS
-    NOT (
-      %context.Principal == "*" OR
-      %context.Principal.AWS == "*" OR
-      %context.Principal.AWS == "arn:aws:iam::*:root"
-    )
+    when %context.Principal exists OR %context.Principal.AWS exists {
+      NOT (
+        %context.Principal == "*" OR
+        %context.Principal.AWS == "*" OR
+        %context.Principal.AWS == "arn:aws:iam::*:root"
+      ) <<KMS key policy contains wildcard principal which makes it publicly accessible>>
+    }
 
     # Check that Effect: Allow is not used with wildcard
-    NOT (
-      %context.Effect == "Allow" AND (
-        %context.Principal == "*" OR
-        %context.Principal.AWS == "*"
-      )
-    )
+    when %context.Effect == "Allow" {
+      when %context.Principal exists {
+        %context.Principal != "*" <<KMS key policy allows access to everyone with Effect: Allow>>
+      }
+      when %context.Principal.AWS exists {
+        %context.Principal.AWS != "*" <<KMS key policy allows access to everyone with Effect: Allow>>
+      }
+      
+      # Check for specific external accounts that might not be in your organization
+      when %context.Principal.AWS is_list {
+        %context.Principal.AWS NOT CONTAINS /^arn:aws:iam::\d{12}:root$/ 
+          <<KMS key policy allows access to external account root users>>
+      }
+    }
   }
 }
