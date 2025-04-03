@@ -1,23 +1,15 @@
-let resource_type = AWS::KMS::Key
+# KMS.5: KMS keys should not be publicly accessible
 
-rule KMS_KEY_PUBLIC_ACCESS when resource is resource_type {
-  let statements = properties.KeyPolicy.Statement
-  %statements ALL {
-    %context = $
-    
-    # Check if wildcard "*" is not used in Principal.AWS
-    NOT (
-      %context.Principal == "*" OR
-      %context.Principal.AWS == "*" OR
-      %context.Principal.AWS == "arn:aws:iam::*:root"
-    )
+let resource_type = "AWS::KMS::Key"
 
-    # Check that Effect: Allow is not used with wildcard
-    NOT (
-      %context.Effect == "Allow" AND (
-        %context.Principal == "*" OR
-        %context.Principal.AWS == "*"
-      )
-    )
+rule kms_key_public_access when resource_type {
+  Resources.* Type == resource_type {
+    Properties.KeyPolicy.Statement[*] {
+      Effect == "Allow"
+      Principal == "*"
+      Action[*] == "kms:Encrypt" or
+      Action[*] == "kms:Decrypt"
+    }
+    << report(message: "KMS key '${Name}' should not be publicly accessible.", status: "FAIL")
   }
 }
