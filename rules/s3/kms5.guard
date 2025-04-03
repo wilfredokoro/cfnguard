@@ -1,42 +1,19 @@
-# Rule: check_kms_public_access
-# Description: Ensures KMS keys are not publicly accessible with sensitive permissions
-# Severity: HIGH
-# Compliance: CIS AWS Foundations, NIST 800-53, AWS Well-Architected Framework
-rule check_kms_public_access {
-    AWS::KMS::Key {
-        # Check for public access with wildcard principal and sensitive actions
-        when Properties.KeyPolicy.Statement[*] {
-            Effect == "Allow" and 
-            (
-                Principal == "*" or 
-                Principal.AWS == "*" or 
-                Principal.Service == "*"
-            ) and 
-            (
-                # Check for sensitive actions in both scalar and array forms
-                Action == "*" or
-                Action[*] == "*" or
-                Action in ["kms:Encrypt", "kms:Decrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*"] or
-                Action[*] in ["kms:Encrypt", "kms:Decrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*"]
-            ) and
-            # Allow exception for policies with strict conditions
-            Condition !exists or Condition == null
-        } {
-            <<[
-                report(
-                    message: "KMS key '${ResourceId || Name || ""}' should not be publicly accessible with sensitive permissions.",
-                    status: "FAIL",
-                    resourceId: %ResourceId
-                )
-            ]>>
-        } else {
-            <<[
-                report(
-                    message: "KMS key '${ResourceId || Name || ""}' does not allow public access to sensitive operations.",
-                    status: "PASS",
-                    resourceId: %ResourceId
-                )
-            ]>>
-        }
-    }
+# Rule name: KMS.5 - KMS keys should not be publicly accessible
+
+rule KMSKeysAreNotPublic when resource is AWS::KMS::Key {
+    properties.KeyPolicy.Statement[*].Principal.AWS NOT IN ["*", "arn:aws:iam::*:root"]
+    properties.KeyPolicy.Statement[*].Principal.AWS NOT EXISTS or
+    properties.KeyPolicy.Statement[*].Principal.AWS != "*"
+    
+    # Also deny if Effect is Allow with wildcard principal
+    NOT (
+        properties.KeyPolicy.Statement[*].Effect == "Allow" AND
+        (
+            properties.KeyPolicy.Statement[*].Principal.AWS == "*" OR
+            properties.KeyPolicy.Statement[*].Principal == "*"
+        )
+    )
+    
+    # Optional: Ensure AWS Config can read the policy
+    # This assumes your Config role is included
 }
