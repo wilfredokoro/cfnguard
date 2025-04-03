@@ -1,5 +1,6 @@
 ---
-- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, FAIL
+- name: >
+    KMS keys with public access to sensitive actions like Encrypt/Decrypt, FAIL
   input:
     Resources:
       MyKMSKey1:
@@ -65,13 +66,13 @@
     rules:
       KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: PASS
 
-- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP with no resources
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
   input:
     Resources: {}
   expectations:
     rules:
       KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
-- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP with empty resources
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
   input:
     Resources: []
   expectations:
