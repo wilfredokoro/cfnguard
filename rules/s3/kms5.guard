@@ -1,16 +1,53 @@
-# KMS.5: KMS keys should not be publicly accessible
-
 let resource_type = "AWS::KMS::Key"
+let sensitive_actions = [
+  "kms:Encrypt", 
+  "kms:Decrypt", 
+  "kms:ReEncrypt*", 
+  "kms:GenerateDataKey*", 
+  "kms:ScheduleKeyDeletion"
+]
 
 rule kms_key_public_access when resource_type {
-    Resources.* Type == resource_type {
-        Properties.KeyPolicy.Statement[*] {
-            Effect == "Allow" and 
-            Principal == "*" and 
-            (Action[*] == "kms:Encrypt" or Action[*] == "kms:Decrypt")
+  Resources.* Type == resource_type {
+    # Check for public access in policy statements
+    when Properties.KeyPolicy.Statement exists {
+      # Check if any statement allows public access to sensitive actions
+      %has_public_access = Properties.KeyPolicy.Statement[*] {
+        Effect == "Allow" and 
+        (
+          Principal == "*" or 
+          Principal.AWS == "*" or
+          Principal.AWS[*] == "*"
+        ) and 
+        (
+          %action_match = false
+          when Action exists {
+            %action_match = some sensitive_actions[*] {
+              this in Action or Action == "*" or Action[*] == this or Action[*] == "*"
+            }
+          }
+          when Actions exists {
+            %action_match = some sensitive_actions[*] {
+              this in Actions or Actions == "*" or Actions[*] == this or Actions[*] == "*"
+            }
+          }
+          %action_match
+        ) and
+        # Check if there's no restrictive condition
+        when Condition exists {
+          # If conditions exist, we need more complex logic to determine if they're restrictive enough
+          # This is a simplified check - in practice, you might need more detailed condition analysis
+          Condition !exists or Condition == {}
         }
+      }
+      
+      when %has_public_access {
         << report(message="KMS key '${Name}' should not be publicly accessible.", status="FAIL")
+      } else {
+        << report(message="KMS key '${Name}' does not allow public access to sensitive operations.", status="PASS")
+      }
     }
+  }
 }
 
 #rules/s3/tests/kms6.guard
