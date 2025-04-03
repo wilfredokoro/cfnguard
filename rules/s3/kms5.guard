@@ -5,7 +5,9 @@ rule kms_key_public_access when resource_type {
     Properties.KeyPolicy.Statement[*] {
       when Effect == "Allow" {
         when Principal == "*" {
-          %not Statement[*].Action[*] like /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
+          %not {
+            Action[*] like /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
+          }
         }
       }
     }
