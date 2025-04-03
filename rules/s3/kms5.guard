@@ -8,10 +8,10 @@ rule kms_key_public_access {
             Principal == "*"
             Action[*] == "kms:Encrypt" or
             Action[*] == "kms:Decrypt"
+            report(
+                message: "KMS key '${Name}' should not be publicly accessible.",
+                status: FAIL
+            )
         }
-        report(
-            message: "KMS key '${Name}' should not be publicly accessible.",
-            status: FAIL
-        )
     }
-
+}
