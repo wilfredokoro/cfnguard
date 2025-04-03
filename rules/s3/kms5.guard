@@ -8,7 +8,8 @@ rule kms_key_public_access when resource_type {
       Effect == "Allow"
       Principal == "*"
       Action[*] IN ["kms:Encrypt", "kms:Decrypt"]
+
+      report = "KMS key '${Name}' should not be publicly accessible."
     }
-    << report(message: "KMS key '${Name}' should not be publicly accessible.", status: "FAIL")
   }
 }
