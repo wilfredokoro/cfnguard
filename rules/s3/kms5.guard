@@ -1,19 +1,21 @@
-# Rule name: KMS.5 - KMS keys should not be publicly accessible
-
-rule KMSKeysAreNotPublic when resource is AWS::KMS::Key {
-    properties.KeyPolicy.Statement[*].Principal.AWS NOT IN ["*", "arn:aws:iam::*:root"]
-    properties.KeyPolicy.Statement[*].Principal.AWS NOT EXISTS or
-    properties.KeyPolicy.Statement[*].Principal.AWS != "*"
+rule KMSKeyShouldNotBePublic when resource is AWS::KMS::Key {
+  let statements = properties.KeyPolicy.Statement
+  %statements ALL {
+    %context = $
     
-    # Also deny if Effect is Allow with wildcard principal
+    # Check if wildcard "*" is not used in Principal.AWS
     NOT (
-        properties.KeyPolicy.Statement[*].Effect == "Allow" AND
-        (
-            properties.KeyPolicy.Statement[*].Principal.AWS == "*" OR
-            properties.KeyPolicy.Statement[*].Principal == "*"
-        )
+      %context.Principal == "*" OR
+      %context.Principal.AWS == "*" OR
+      %context.Principal.AWS == "arn:aws:iam::*:root"
     )
-    
-    # Optional: Ensure AWS Config can read the policy
-    # This assumes your Config role is included
+
+    # Check that Effect: Allow is not used with wildcard
+    NOT (
+      %context.Effect == "Allow" AND (
+        %context.Principal == "*" OR
+        %context.Principal.AWS == "*"
+      )
+    )
+  }
 }
