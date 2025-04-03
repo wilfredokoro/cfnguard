@@ -4,7 +4,7 @@ rule KMS_KEY_PUBLIC_ACCESS when %resource_type !empty {
   resource_type.Properties.KeyPolicy.Statement[*] {
     Effect == "Allow"
     Principal == "*"
-    Action[*] != /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
+    Action[*] == /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
    <<
     Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
     Severity: HIGH
