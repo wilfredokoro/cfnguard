@@ -6,12 +6,11 @@ rule kms_key_public_access {
         Properties.KeyPolicy.Statement[*] {
             Effect == "Allow"
             Principal == "*"
-            Action[*] == "kms:Encrypt" or
-            Action[*] == "kms:Decrypt"
-            report(
-                message: "KMS key '${Name}' should not be publicly accessible.",
-                status: FAIL
-            )
+            Action[*] == "kms:Encrypt" or Action[*] == "kms:Decrypt"
         }
+        report(
+            message: "KMS key '${Name}' should not be publicly accessible.",
+            status: FAIL
+        )
     }
 }
