@@ -1,7 +1,7 @@
 let resource_type = Resources.*[ Type == 'AWS::KMS::Key' ]
 
 rule KMS_KEY_PUBLIC_ACCESS when %resource_type !empty {
-  resource_type.Properties.KeyPolicy.Statement[*] {
+  %resource_type.Properties.KeyPolicy.Statement[*] {
     Effect == "Allow"
     Principal.AWS == "*"
     Action[*] == /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
