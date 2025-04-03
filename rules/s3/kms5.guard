@@ -1,13 +1,26 @@
 # KMS.5: KMS keys should not be publicly accessible
+#
+# Description: This rule checks if KMS keys have policies that allow public access
+# by detecting when the Principal is set to "*" with Allow effect for any KMS operations.
+# Severity: HIGH
+# Resource: AWS::KMS::Key
 
 let resource_type = "AWS::KMS::Key"
 
 rule kms_key_public_access when resource_type {
   Resources.*[ Type == resource_type ] {
     Properties.KeyPolicy.Statement[*] {
-      Effect == "Allow"
-      Principal == "*"
-      Action[*] == "kms:Encrypt"
+      when Effect == "Allow" {
+        when Principal == "*" {
+          # Check for any KMS operations that could allow public access
+          %not {
+            Action[*] like /kms:(Encrypt|Decrypt|ReEncrypt\*|GenerateDataKey\*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
+          }
+        }
+      }
     }
   }
-}
+} <<
+  Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
+  Severity: HIGH
+>>
