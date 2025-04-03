@@ -9,7 +9,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:Encrypt
                   - kms:Decrypt
@@ -21,7 +22,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:Encrypt
                   - kms:Decrypt
@@ -40,7 +42,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:Encrypt
                   - kms:Decrypt
@@ -52,7 +55,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:Encrypt
                   - kms:Decrypt
@@ -84,7 +88,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:ScheduleKeyDeletion
                 Resource: "*"
@@ -95,7 +100,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:ScheduleKeyDeletion
                 Resource: "*"
@@ -113,7 +119,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:ScheduleKeyDeletion
                 Resource: "*"
@@ -124,7 +131,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:ScheduleKeyDeletion
                 Resource: "*"
@@ -148,7 +156,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:GenerateDataKey
                 Resource: "*"
@@ -159,7 +168,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:GenerateDataKey
                 Resource: "*"
@@ -176,7 +186,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:GenerateDataKey
                 Resource: "*"
@@ -187,7 +198,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:GenerateDataKey
                 Resource: "*"
@@ -211,7 +223,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:CreateGrant
                 Resource: "*"
@@ -222,7 +235,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:CreateGrant
                 Resource: "*"
@@ -239,7 +253,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:CreateGrant
                 Resource: "*"
@@ -250,7 +265,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:CreateGrant
                 Resource: "*"
@@ -273,7 +289,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:ListKeys
                 Resource: "*"
@@ -284,7 +301,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:ListKeys
                 Resource: "*"
@@ -301,7 +319,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:ListKeys
                 Resource: "*"
@@ -312,7 +331,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:ListKeys
                 Resource: "*"
@@ -336,7 +356,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:PutKeyPolicy
                 Resource: "*"
@@ -347,7 +368,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:PutKeyPolicy
                 Resource: "*"
@@ -364,7 +386,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:PutKeyPolicy
                 Resource: "*"
@@ -375,7 +398,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:PutKeyPolicy
                 Resource: "*"
@@ -398,7 +422,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:CreateAlias
                 Resource: "*"
@@ -409,7 +434,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:CreateAlias
                 Resource: "*"
@@ -426,7 +452,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:CreateAlias
                 Resource: "*"
@@ -437,7 +464,8 @@
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Principal: "*"
+                Principal:
+                  AWS: "*"
                 Action:
                   - kms:CreateAlias
                 Resource: "*"
