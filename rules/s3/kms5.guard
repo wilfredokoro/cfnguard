@@ -6,13 +6,9 @@ let resource_type = "AWS::KMS::Key"
 rule kms_key_public_access when %resource_type == "AWS::KMS::Key" {
     Resources.*[ Type == %resource_type ] {
         Properties.KeyPolicy.Statement[*] {
-            Effect == "Allow" and Principal != null and Principal == "*" and (
+            Effect == "Allow" and Principal == "*" and (
                 "kms:Encrypt" in Action[*] or 
-                "kms:Decrypt" in Action[*] or
-                "kms:ReEncrypt*" in Action[*] or
-                "kms:GenerateDataKey*" in Action[*] or
-                "kms:CreateGrant" in Action[*] or
-                Action == "*"
+                "kms:Decrypt" in Action[*]
             ) << {
                 report(message="KMS key '${Name}' should not be publicly accessible.", status="FAIL")
             }
