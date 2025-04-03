@@ -6,7 +6,7 @@ rule kms_key_should_not_allow_wildcard_principal {
   }
 }
 
-<<
-  Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
-  Severity: HIGH
->>
+    <<
+    Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
+    Severity: HIGH
+    >>
