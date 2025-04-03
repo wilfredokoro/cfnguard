@@ -1,27 +1,26 @@
+# KMS.5: KMS keys should not be publicly accessible
+
 let resource_type = "AWS::KMS::Key"
 
-rule kms_key_public_access when resource_type {
-    Resources.* Type == resource_type {
-        # Check for public access with wildcard principal and sensitive actions
-        when Properties.KeyPolicy.Statement[*] {
-            Effect == "Allow" and 
-            (Principal == "*" or Principal.AWS == "*") and 
+rule kms_key_public_access {
+    Resources.* {
+        Type == resource_type
+        Properties.KeyPolicy.Statement[*] {
+            Effect == "Allow"
+            (Principal == "*" or Principal.AWS == "*")
             (
                 Action == "kms:Encrypt" or 
                 Action == "kms:Decrypt" or 
                 Action == "kms:ReEncrypt*" or 
                 Action == "kms:GenerateDataKey*" or
+                Action == "*" or
                 Action[*] == "kms:Encrypt" or 
                 Action[*] == "kms:Decrypt" or 
                 Action[*] == "kms:ReEncrypt*" or 
                 Action[*] == "kms:GenerateDataKey*" or
-                Action == "*" or
                 Action[*] == "*"
             )
-        } {
-            << report(message="KMS key '${Name}' should not be publicly accessible.", status="FAIL")
-        } else {
-            << report(message="KMS key '${Name}' does not allow public access to sensitive operations.", status="PASS")
         }
+        << report(message="KMS key '${Name}' should not be publicly accessible.", status="FAIL")
     }
 }
