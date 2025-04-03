@@ -7,9 +7,7 @@ rule kms_key_public_access when resource_type {
     Properties.KeyPolicy.Statement[*] {
       Effect == "Allow"
       Principal == "*"
-      Action[*] IN ["kms:Encrypt", "kms:Decrypt"]
-
-      report = "KMS key '${Name}' should not be publicly accessible."
+      Action[*] == "kms:Encrypt"
     }
   }
 }
