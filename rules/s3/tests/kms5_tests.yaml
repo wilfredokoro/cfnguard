@@ -1,6 +1,5 @@
 ---
-- name: >
-    KMS keys with public access to sensitive actions like Encrypt/Decrypt, FAIL
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, FAIL
   input:
     Resources:
       MyKMSKey1:
@@ -31,7 +30,7 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: FAIL
+      KMS_KEY_PUBLIC_ACCESS: FAIL
 
 - name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, PASS
   input:  
@@ -64,20 +63,20 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: PASS
+      KMS_KEY_PUBLIC_ACCESS: PASS
 
 - name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
   input:
     Resources: {}
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
+      KMS_KEY_PUBLIC_ACCESS: SKIP
 - name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
   input:
     Resources: []
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
+      KMS_KEY_PUBLIC_ACCESS: SKIP
 
 - name: KMS keys with public access to sensitive actions like Schedule Key Deletion, FAIL
   input:
@@ -108,7 +107,7 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: FAIL
+      KMS_KEY_PUBLIC_ACCESS: FAIL
 
 - name: KMS keys with public access to sensitive actions like Schedule Key Deletion, PASS
   input:  
@@ -139,13 +138,13 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: PASS
+      KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like Schedule Key Deletion, SKIP 
   input:
     Resources: {}
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
+      KMS_KEY_PUBLIC_ACCESS: SKIP
 
 - name: KMS keys with public access to sensitive actions like Generate Data Key, FAIL
   input:
@@ -176,7 +175,7 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: FAIL
+      KMS_KEY_PUBLIC_ACCESS: FAIL
 - name: KMS keys with public access to sensitive actions like Generate Data Key, PASS
   input:  
     Resources:
@@ -206,13 +205,13 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: PASS
+      KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like Generate Data Key, SKIP
   input:
     Resources: {}
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
+      KMS_KEY_PUBLIC_ACCESS: SKIP
 
 - name: KMS keys with public access to sensitive actions like Create Grant, PASS
   input:  
@@ -243,7 +242,7 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: PASS
+      KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like Create Grant, FAIL
   input:  
     Resources:
@@ -273,13 +272,13 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: FAIL
+      KMS_KEY_PUBLIC_ACCESS: FAIL
 - name: KMS keys with public access to sensitive actions like Create Grant, SKIP
   input:
     Resources: {}
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
+      KMS_KEY_PUBLIC_ACCESS: SKIP
 - name: KMS keys with public access to sensitive actions like List Keys, PASS
   input:  
     Resources:
@@ -309,7 +308,7 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: PASS
+      KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like List Keys, FAIL
   input:  
     Resources:
@@ -339,13 +338,13 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: FAIL
+      KMS_KEY_PUBLIC_ACCESS: FAIL
 - name: KMS keys with public access to sensitive actions like List Keys, SKIP
   input:
     Resources: {}
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
+      KMS_KEY_PUBLIC_ACCESS: SKIP
 
 - name: KMS keys with public access to sensitive actions like PutKey Policy, PASS
   input:  
@@ -376,7 +375,7 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: PASS
+      KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like PutKey Policy, FAIL
   input:  
     Resources:
@@ -406,13 +405,13 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: FAIL
+      KMS_KEY_PUBLIC_ACCESS: FAIL
 - name: KMS keys with public access to sensitive actions like PutKey Policy, SKIP
   input:
     Resources: {}
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
+      KMS_KEY_PUBLIC_ACCESS: SKIP
 - name: KMS keys with public access to sensitive actions like CreateAlias, PASS
   input:  
     Resources:
@@ -442,7 +441,7 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: PASS
+      KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like CreateAlias, FAIL
   input:  
     Resources:
@@ -472,13 +471,13 @@
                 Resource: "*"
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: FAIL
+      KMS_KEY_PUBLIC_ACCESS: FAIL
 - name: KMS keys with public access to sensitive actions like CreateAlias, SKIP
   input:
     Resources: {}
   expectations:
     rules:
-      KMS_KEY_PUBLIC_ACCESS_TO_SENSITIVE_ACTIONS: SKIP
+      KMS_KEY_PUBLIC_ACCESS: SKIP
 
 
 
