@@ -3,7 +3,15 @@ rule kms_key_should_not_allow_wildcard_principal {
     Effect == "Allow"
     Principal == "*"
     Action[*] != /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/
+   <<
+    Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
+    Severity: HIGH
+   >>
+  
   }
+
+
+ 
 }
 
     
