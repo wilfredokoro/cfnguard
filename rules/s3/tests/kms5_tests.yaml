@@ -1,0 +1,32 @@
+---
+- name: KMS_KEY_PUBLIC_ACCESS_BLOCKED_PASS
+  input:
+    Resources:
+      MyS3Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+          BucketName: my-s3-bucket
+          BucketEncryption:
+            ServerSideEncryptionConfiguration:
+              - ServerSideEncryptionByDefault:
+                  SSEAlgorithm: aws:kms
+                  KMSMasterKeyID: arn:aws:kms:us-east-1:123456789012:key/abcd1234-5678-90ab-cdef-EXAMPLEKEY
+  expectations:
+    rules:
+      S3_KMS_KEY_PUBLIC_ACCESS_BLOCKED: PASS
+
+- name: KMS_KEY_PUBLIC_ACCESS_BLOCKED_FAIL
+  input:
+    Resources:
+      MyS3Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+          BucketName: my-s3-bucket
+          BucketEncryption:
+            ServerSideEncryptionConfiguration:
+              - ServerSideEncryptionByDefault:
+                  SSEAlgorithm: aws:kms
+                  KMSMasterKeyID: arn:aws:kms:us-east-1:123456789012:key/abcd1234-5678-90ab-cdef-EXAMPLEKEY
+  expectations:
+    rules:
+      S3_KMS_KEY_PUBLIC_ACCESS_BLOCKED: FAIL
