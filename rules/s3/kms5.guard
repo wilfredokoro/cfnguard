@@ -8,9 +8,9 @@ rule kms_key_public_access when %resource_type == "AWS::KMS::Key" {
         Properties.KeyPolicy.Statement[*] {
             Effect == "Allow" and Principal != null and Principal == "*" and (
                 "kms:Encrypt" in Action[*] or "kms:Decrypt" in Action[*]
-            ) << {
-                report(message="KMS key '${Name}' should not be publicly accessible.", status="FAIL")
-            }
+            )
+        } << {
+            report(message="KMS key '${Name}' should not be publicly accessible.", status="FAIL")
         }
     }
 }
