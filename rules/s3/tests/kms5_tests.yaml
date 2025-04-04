@@ -406,12 +406,14 @@
   expectations:
     rules:
       KMS_KEY_PUBLIC_ACCESS: FAIL
+
 - name: KMS keys with public access to sensitive actions like PutKey Policy, SKIP
   input:
     Resources: {}
   expectations:
     rules:
       KMS_KEY_PUBLIC_ACCESS: SKIP
+
 - name: KMS keys with public access to sensitive actions like CreateAlias, PASS
   input:  
     Resources:
