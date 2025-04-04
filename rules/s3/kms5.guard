@@ -5,7 +5,7 @@ rule KMS_KEY_PUBLIC_ACCESS when %resource_type !empty {
     Effect == "Allow"
     Principal.AWS == "*" or Principal == "*"
     Action[*] == /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/ or
-    Action[*] == /kms:(DescribeKey|GetKeyPolicy|GetKeyRotationStatus|List*)/
+    Action[*] == /kms:(DescribeKey|GetKeyPolicy|CreateAlias|GetKeyRotationStatus|List*)/
    <<
     Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
     Severity: HIGH
