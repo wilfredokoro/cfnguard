@@ -30,21 +30,21 @@
     rules:
       LAMBDA_VPC_MULTI_AZ_CHECK: FAIL
 
-- name: Lambda function VPC Multi AZ, SKIP
-  input:
-    Resources:
-      MyLambdaFunction:
-        Type: AWS::Lambda::Function
-        Properties:
-          VpcConfig:
-            SubnetIds:
-              - subnet-12345678
-            SecurityGroupIds:
-              - sg-12345678
-          Runtime: python3.8
-  expectations:
-    rules:
-      LAMBDA_VPC_MULTI_AZ_CHECK: SKIP
+# - name: Lambda function VPC Multi AZ, SKIP
+#   input:
+#     Resources:
+#       MyLambdaFunction:
+#         Type: AWS::Lambda::Function
+#         Properties:
+#           VpcConfig:
+#             SubnetIds:
+#               - subnet-12345678
+#             SecurityGroupIds:
+#               - sg-12345678
+#           Runtime: python3.8
+#   expectations:
+#     rules:
+#       LAMBDA_VPC_MULTI_AZ_CHECK: SKIP
 
 
 - name: Lambda function VPC Multi AZ, SKIP
