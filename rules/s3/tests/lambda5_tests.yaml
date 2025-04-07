@@ -1,0 +1,43 @@
+- name: Lzmbda function VPC Multi AZ, PASS
+  input:
+    Resources:
+      MyLambdaFunction:
+        Type: AWS::Lambda::Function
+        Properties:
+          VpcConfig:
+            SubnetIds:
+              - subnet-12345678
+              - subnet-87654321
+            SecurityGroupIds:
+              - sg-12345678
+  expectations:
+    rules:
+      LAMBDA_VPC_MULTI_AZ: PASS
+- name: Lambda function VPC Multi AZ, FAIL
+  input:
+    Resources:
+      MyLambdaFunction:
+        Type: AWS::Lambda::Function
+        Properties:
+          VpcConfig:
+            SubnetIds:
+              - subnet-12345678
+            SecurityGroupIds:
+              - sg-12345678
+  expectations:
+    rules:
+      LAMBDA_VPC_MULTI_AZ: FAIL
+- name: Lambda function VPC Multi AZ, SKIP
+  input:
+    Resources:
+      MyLambdaFunction:
+        Type: AWS::Lambda::Function
+        Properties:
+          VpcConfig:
+            SubnetIds:
+              - subnet-12345678
+            SecurityGroupIds:
+              - sg-12345678
+  expectations:
+    rules:
+      LAMBDA_VPC_MULTI_AZ: SKIP
