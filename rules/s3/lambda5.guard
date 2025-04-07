@@ -3,10 +3,11 @@ let lambda_with_vpc = %lambda_functions[ Properties.VpcConfig exists ]
 
 rule LAMBDA_VPC_MULTI_AZ_CHECK when %lambda_with_vpc !empty {
     %lambda_with_vpc.Properties.VpcConfig.SubnetIds exists
-    %lambda_with_vpc.Properties.VpcConfig.SubnetIds.length >= 2
-
     %lambda_with_vpc.Properties.VpcConfig.SecurityGroupIds exists
-    %lambda_with_vpc.Properties.VpcConfig.SecurityGroupIds.length > 0
+
+    # Instead of .length, check explicitly for at least 2 subnets and 1 security group
+    %lambda_with_vpc.Properties.VpcConfig.SubnetIds[1] exists
+    %lambda_with_vpc.Properties.VpcConfig.SecurityGroupIds[0] exists
 
     <<
         Violation: Lambda functions with VPC config must have at least two subnets and one security group
