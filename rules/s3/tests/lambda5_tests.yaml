@@ -13,5 +13,5 @@
               - sg-12345678
   expectations:
     rules:
-      LAMBDA_VPC_MULTI_AZ: PASS
+      LAMBDA_VPC_MULTI_AZ_CHECK: PASS
 
