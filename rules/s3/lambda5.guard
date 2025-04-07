@@ -1,18 +1,14 @@
 let lambda_functions = Resources.*[ Type == 'AWS::Lambda::Function' ]
+let lambda_with_vpc = %lambda_functions[ Properties.VpcConfig exists ]
 
-rule LAMBDA_VPC_MULTI_AZ_CHECK when %lambda_functions !empty {
-    all %lambda_functions as lambda {
-        lambda.Properties.VpcConfig exists =>
-        (
-            lambda.Properties.VpcConfig.SubnetIds exists
-            lambda.Properties.VpcConfig.SubnetIds.length >= 2
-            lambda.Properties.VpcConfig.SecurityGroupIds exists
-            lambda.Properties.VpcConfig.SecurityGroupIds.length > 0
-        )
-    }
+rule LAMBDA_VPC_MULTI_AZ_CHECK when %lambda_with_vpc !empty {
+    %lambda_with_vpc.Properties.VpcConfig.SubnetIds exists
+    %lambda_with_vpc.Properties.VpcConfig.SubnetIds.length >= 2
+    %lambda_with_vpc.Properties.VpcConfig.SecurityGroupIds exists
+    %lambda_with_vpc.Properties.VpcConfig.SecurityGroupIds.length > 0
 
     <<
-        Violation: Lambda functions must be connected to a VPC with at least two subnets and one security group if VpcConfig is defined.
-        Fix: Connect Lambda functions to a VPC with subnet(s) in multiple AZs and at least one security group.
+        Violation: Lambda functions with VPC configuration must have at least two subnets and one security group
+        Fix: Add two or more SubnetIds and at least one SecurityGroupId to the Lambda's VpcConfig
     >>
 }
