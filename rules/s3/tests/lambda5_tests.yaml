@@ -1,4 +1,4 @@
-- name: Lzmbda function VPC Multi AZ, PASS
+- name: Lambda function VPC Multi AZ, PASS
   input:
     Resources:
       MyLambdaFunction:
