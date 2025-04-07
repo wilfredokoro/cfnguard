@@ -1,4 +1,4 @@
-# RDS_AURORA_postgresql_AUDIT_LOGGING_ENABLED #
+# RDS_AURORA_postgresql_AUDIT_LOGGING_ENABLED 01#
 ##########################################
 ---
 - name: Empty, SKIP

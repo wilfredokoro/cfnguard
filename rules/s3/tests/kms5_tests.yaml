@@ -1,0 +1,489 @@
+---
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, PASS
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:Encrypt
+                  - kms:Decrypt
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:Encrypt
+                  - kms:Decrypt
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: PASS
+
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, FAIL 
+  input:
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:Encrypt
+                  - kms:Decrypt
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:Encrypt
+                  - kms:Decrypt
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: FAIL
+
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: SKIP
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
+  input:
+    Resources: []
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: SKIP
+
+- name: KMS keys with public access to sensitive actions like Schedule Key Deletion, FAIL
+  input:
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:ScheduleKeyDeletion
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:ScheduleKeyDeletion
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: FAIL
+
+- name: KMS keys with public access to sensitive actions like Schedule Key Deletion, PASS
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:ScheduleKeyDeletion
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:ScheduleKeyDeletion
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: PASS
+- name: KMS keys with public access to sensitive actions like Schedule Key Deletion, SKIP 
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: SKIP
+
+- name: KMS keys with public access to sensitive actions like Generate Data Key, FAIL
+  input:
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:GenerateDataKey
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:GenerateDataKey
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: FAIL
+- name: KMS keys with public access to sensitive actions like Generate Data Key, PASS
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:GenerateDataKey
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:GenerateDataKey
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: PASS
+- name: KMS keys with public access to sensitive actions like Generate Data Key, SKIP
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: SKIP
+
+- name: KMS keys with public access to sensitive actions like Create Grant, PASS
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:CreateGrant
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:CreateGrant
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: PASS
+- name: KMS keys with public access to sensitive actions like Create Grant, FAIL
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:CreateGrant
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:CreateGrant
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: FAIL
+- name: KMS keys with public access to sensitive actions like Create Grant, SKIP
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: SKIP
+- name: KMS keys with public access to sensitive actions like List Keys, PASS
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:ListKeys
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:ListKeys
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: PASS
+- name: KMS keys with public access to sensitive actions like List Keys, FAIL
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:ListKeys
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:ListKeys
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: FAIL
+- name: KMS keys with public access to sensitive actions like List Keys, SKIP
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: SKIP
+
+- name: KMS keys with public access to sensitive actions like PutKey Policy, PASS
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:PutKeyPolicy
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:PutKeyPolicy
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: PASS
+- name: KMS keys with public access to sensitive actions like PutKey Policy, FAIL
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:PutKeyPolicy
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:PutKeyPolicy
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: FAIL
+
+- name: KMS keys with public access to sensitive actions like PutKey Policy, SKIP
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: SKIP
+
+- name: KMS keys with public access to sensitive actions like CreateAlias, PASS
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:CreateAlias
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:CreateAlias
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: PASS
+
+- name: KMS keys with public access to sensitive actions like CreateAlias, FAIL
+  input:  
+    Resources:
+      MyKMSKey1:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:CreateAlias
+                Resource: "*"
+      MyKMSKey2:
+        Type: "AWS::KMS::Key"
+        Properties:
+          KeyPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Principal:
+                  AWS: "*"
+                Action:
+                  - kms:CreateAlias
+                Resource: "*"
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: FAIL
+- name: KMS keys with public access to sensitive actions like CreateAlias, SKIP
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      KMS_KEY_PUBLIC_ACCESS: SKIP
+
+
+
+
+
+    
