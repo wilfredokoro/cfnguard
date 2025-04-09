@@ -1,15 +1,15 @@
-# - name: Empty, SKIP
-#   input: {}
-#   expectations:
-#     rules:
-#       ALB_HTTP_DROP_INVALID_HEADER_ENABLED: SKIP
+- name: Empty, SKIP
+  input: {}
+  expectations:
+    rules:
+      ALB_HTTP_DROP_INVALID_HEADER_ENABLED: SKIP
 
-# - name: No resources, SKIP
-#   input:
-#     Resources: {}
-#   expectations:
-#     rules:
-#       ALB_HTTP_DROP_INVALID_HEADER_ENABLED: SKIP
+- name: No resources, SKIP
+  input:
+    Resources: {}
+  expectations:
+    rules:
+      ALB_HTTP_DROP_INVALID_HEADER_ENABLED: SKIP
 
 - name: Elastic Load Balancing V2 Resources of type network, SKIP
   input:
