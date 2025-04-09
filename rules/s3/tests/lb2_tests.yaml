@@ -1,5 +1,4 @@
----
-- name: Empty. SKIP
+- name: Empty, SKIP
   input: {}
   expectations:
     rules:
