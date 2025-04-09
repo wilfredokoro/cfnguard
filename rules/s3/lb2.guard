@@ -1,9 +1,12 @@
-let albs = Resources.*[
-  Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" and
-  (not exists Properties.Type or Properties.Type not in ["gateway", "network"]) and
-  (not exists Metadata.guard.SuppressedRules or
-   "ALB_HTTP_DROP_INVALID_HEADER_ENABLED" not in Metadata.guard.SuppressedRules)
-]
+# Select all load balancers
+let all_albs = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
+
+# Filter out gateway or network type
+let app_albs = %all_albs[ Properties.Type !exists or Properties.Type not in ["gateway", "network"] ]
+
+# Filter out suppressed ones
+let albs = %app_albs[ Metadata.guard.SuppressedRules !exists or
+                      "ALB_HTTP_DROP_INVALID_HEADER_ENABLED" not in Metadata.guard.SuppressedRules ]
 
 rule ALB_HTTP_DROP_INVALID_HEADER_ENABLED when %albs !empty {
   %albs {
