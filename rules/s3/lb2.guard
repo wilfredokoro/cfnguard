@@ -1,6 +1,6 @@
+
 # Rule Parameters:
 #   None
-
 # Scenarios:
 # a) SKIP: when there are no Elastic Load Balancing V2 Resources of type ‘application’
 # b) SKIP: when metadata has rule suppression for ALB_HTTP_DROP_INVALID_HEADER_ENABLED
