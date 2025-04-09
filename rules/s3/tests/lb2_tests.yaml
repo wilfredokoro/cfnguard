@@ -1,8 +1,4 @@
 ---
-##############################################
-# ALB_HTTP_DROP_INVALID_HEADER_ENABLED #
-##############################################
-
 - name: Empty, SKIP
   input: {}
   expectations:
