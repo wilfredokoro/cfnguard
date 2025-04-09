@@ -1,0 +1,36 @@
+# Rule Parameters:
+#   None
+
+# Scenarios:
+# a) SKIP: when there are no Elastic Load Balancing V2 Resources of type ‘application’
+# b) SKIP: when metadata has rule suppression for ALB_HTTP_DROP_INVALID_HEADER_ENABLED
+# c) FAIL: when ‘LoadBalancerAttributes’ have not been provided
+# d) FAIL: when ‘LoadBalancerAttributes’ have not been provided without the ‘routing.http.drop_invalid_header_fields.enabled’ attribute
+# e) FAIL: when ‘LoadBalancerAttributes’ have been provided with the ‘routing.http.drop_invalid_header_fields.enabled’ attribute set to ‘false’
+# f) PASS: when ‘LoadBalancerAttributes’ have been provided with the ‘routing.http.drop_invalid_header_fields.enabled’ attribute set to ‘true’
+
+# Select all target resources from incoming template (payload)
+let albs = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" 
+                        Properties.Type not in ["gateway", "network"] or 
+                        Properties.Type !exists or 
+                        Metadata.guard.SuppressedRules not exists or 
+                        Metadata.guard.SuppressedRules != .*"ALB_HTTP_DROP_INVALID_HEADER_ENABLED"
+                      ]
+
+rule ALB_HTTP_DROP_INVALID_HEADER_ENABLED when %albs !empty {
+  %albs {
+    Properties {
+      LoadBalancerAttributes exists
+      when LoadBalancerAttributes exists {
+        some LoadBalancerAttributes[*] {
+          Key == "routing.http.drop_invalid_header_fields.enabled"
+          Value == "true"
+        }
+      }
+      else {
+        # Violation: AWS Application Load Balancers (ALBs) must be configured to drop invalid HTTP headers.
+        # Fix: Set the ‘LoadBalancerAttribute’ ‘routing.http.drop_invalid_header_fields.enabled’ to ‘true’
+      }
+    }
+  }
+}
