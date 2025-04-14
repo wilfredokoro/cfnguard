@@ -34,7 +34,7 @@
     rules:
       SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: FAIL
 
-- name: Non-SageMaker resource (PASS - No model to evaluate)
+- name: Non-SageMaker resource, SKIP 
   input:
     Resources:
       MyLambdaFunction:
@@ -45,7 +45,7 @@
           Runtime: "python3.9"
   expectations:
     rules:
-      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: PASS
+      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: SKIP
 
 - name: SageMaker model with incorrect EnableNetworkIsolation type (FAIL)
   input:
