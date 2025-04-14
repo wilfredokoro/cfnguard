@@ -1,6 +1,6 @@
 ---
 - name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, PASS
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -32,7 +32,7 @@
     rules:
       KMS_KEY_PUBLIC_ACCESS: PASS
 
-- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, FAIL 
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, FAIL
   input:
     Resources:
       MyKMSKey1:
@@ -65,13 +65,13 @@
     rules:
       KMS_KEY_PUBLIC_ACCESS: FAIL
 
-- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP
   input:
     Resources: {}
   expectations:
     rules:
       KMS_KEY_PUBLIC_ACCESS: SKIP
-- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP 
+- name: KMS keys with public access to sensitive actions like Encrypt/Decrypt, SKIP
   input:
     Resources: []
   expectations:
@@ -110,7 +110,7 @@
       KMS_KEY_PUBLIC_ACCESS: FAIL
 
 - name: KMS keys with public access to sensitive actions like Schedule Key Deletion, PASS
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -139,7 +139,7 @@
   expectations:
     rules:
       KMS_KEY_PUBLIC_ACCESS: PASS
-- name: KMS keys with public access to sensitive actions like Schedule Key Deletion, SKIP 
+- name: KMS keys with public access to sensitive actions like Schedule Key Deletion, SKIP
   input:
     Resources: {}
   expectations:
@@ -177,7 +177,7 @@
     rules:
       KMS_KEY_PUBLIC_ACCESS: FAIL
 - name: KMS keys with public access to sensitive actions like Generate Data Key, PASS
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -214,7 +214,7 @@
       KMS_KEY_PUBLIC_ACCESS: SKIP
 
 - name: KMS keys with public access to sensitive actions like Create Grant, PASS
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -244,7 +244,7 @@
     rules:
       KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like Create Grant, FAIL
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -280,7 +280,7 @@
     rules:
       KMS_KEY_PUBLIC_ACCESS: SKIP
 - name: KMS keys with public access to sensitive actions like List Keys, PASS
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -310,7 +310,7 @@
     rules:
       KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like List Keys, FAIL
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -347,7 +347,7 @@
       KMS_KEY_PUBLIC_ACCESS: SKIP
 
 - name: KMS keys with public access to sensitive actions like PutKey Policy, PASS
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -377,7 +377,7 @@
     rules:
       KMS_KEY_PUBLIC_ACCESS: PASS
 - name: KMS keys with public access to sensitive actions like PutKey Policy, FAIL
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -415,7 +415,7 @@
       KMS_KEY_PUBLIC_ACCESS: SKIP
 
 - name: KMS keys with public access to sensitive actions like CreateAlias, PASS
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -446,7 +446,7 @@
       KMS_KEY_PUBLIC_ACCESS: PASS
 
 - name: KMS keys with public access to sensitive actions like CreateAlias, FAIL
-  input:  
+  input:
     Resources:
       MyKMSKey1:
         Type: "AWS::KMS::Key"
@@ -481,9 +481,3 @@
   expectations:
     rules:
       KMS_KEY_PUBLIC_ACCESS: SKIP
-
-
-
-
-
-    

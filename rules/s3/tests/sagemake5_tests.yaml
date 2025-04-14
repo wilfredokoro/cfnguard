@@ -1,0 +1,24 @@
+# test_cases/sagemaker_model_network_isolation.yml
+
+- name: SageMaker model with network isolation disabled (FAIL)
+  input:
+    Resources:
+      MySageMakerModel:
+        Type: "AWS::SageMaker::Model"
+        Properties:
+          EnableNetworkIsolation: false
+  expectations:
+    rules:
+      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: FAIL
+
+- name: SageMaker model with network isolation enabled (PASS)
+  input:
+    Resources:
+      MySageMakerModel:
+        Type: "AWS::SageMaker::Model"
+        Properties:
+          EnableNetworkIsolation: true
+  expectations:
+    rules:
+      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: PASS
+
