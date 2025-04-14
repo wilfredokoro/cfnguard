@@ -23,7 +23,7 @@
       SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: PASS
 
 
-- name: SageMaker model with missing EnableNetworkIsolation (FAIL)
+- name: SageMaker model with missing EnableNetworkIsolation, FAIL
   input:
     Resources:
       MySageMakerModel:
@@ -47,7 +47,7 @@
     rules:
       SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: SKIP
 
-- name: SageMaker model with incorrect EnableNetworkIsolation type (FAIL)
+- name: SageMaker model with incorrect EnableNetworkIsolation type, FAIL
   input:
     Resources:
       MySageMakerModel:
