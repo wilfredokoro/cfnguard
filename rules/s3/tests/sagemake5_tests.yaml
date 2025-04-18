@@ -1,0 +1,60 @@
+# test_cases/sagemaker_model_network_isolation.yml
+
+- name: SageMaker model with network isolation disabled, FAIL
+  input:
+    Resources:
+      MySageMakerModel:
+        Type: "AWS::SageMaker::Model"
+        Properties:
+          EnableNetworkIsolation: false
+  expectations:
+    rules:
+      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: FAIL
+
+- name: SageMaker model with network isolation enabled, PASS
+  input:
+    Resources:
+      MySageMakerModel:
+        Type: "AWS::SageMaker::Model"
+        Properties:
+          EnableNetworkIsolation: true
+  expectations:
+    rules:
+      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: PASS
+
+
+- name: SageMaker model with missing EnableNetworkIsolation, FAIL
+  input:
+    Resources:
+      MySageMakerModel:
+        Type: "AWS::SageMaker::Model"
+        Properties:
+          ExecutionRoleArn: "arn:aws:iam::123456789012:role/SageMakerRole"
+  expectations:
+    rules:
+      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: FAIL
+
+- name: Non-SageMaker resource, SKIP 
+  input:
+    Resources:
+      MyLambdaFunction:
+        Type: "AWS::Lambda::Function"
+        Properties:
+          Handler: "index.handler"
+          Role: "arn:aws:iam::123456789012:role/LambdaRole"
+          Runtime: "python3.9"
+  expectations:
+    rules:
+      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: SKIP
+
+- name: SageMaker model with incorrect EnableNetworkIsolation type, FAIL
+  input:
+    Resources:
+      MySageMakerModel:
+        Type: "AWS::SageMaker::Model"
+        Properties:
+          EnableNetworkIsolation: "true"  # String instead of boolean
+  expectations:
+    rules:
+      SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED: FAIL
+

@@ -1,0 +1,64 @@
+- name: Kinesis stream with valid retention, PASS
+  input:
+    Resources:
+      MyStream:
+        Type: AWS::Kinesis::Stream
+        Properties:
+          RetentionPeriodHours: 200
+  expectations:
+    rules:
+      KINESIS_RETENTION_PERIOD_VALID: PASS
+
+- name: Kinesis stream with invalid retention, FAIL
+  input:
+    Resources:
+      MyStream:
+        Type: AWS::Kinesis::Stream
+        Properties:
+          RetentionPeriodHours: 10
+  expectations:
+    rules:
+      KINESIS_RETENTION_PERIOD_VALID: FAIL
+- name: Kinesis stream with missing retention, FAIL
+  input:
+    Resources:
+      MyStream:
+        Type: AWS::Kinesis::Stream
+        Properties:
+          ShardCount: 1
+  expectations:
+    rules:
+      KINESIS_RETENTION_PERIOD_VALID: FAIL
+- name: Kinesis stream with invalid retention type, FAIL    
+  input:
+    Resources:
+      MyStream:
+        Type: AWS::Kinesis::Stream
+        Properties:
+          RetentionPeriodHours: "200"  # String instead of integer
+  expectations:
+    rules:
+      KINESIS_RETENTION_PERIOD_VALID: FAIL
+- name: Non-Kinesis resource, SKIP
+  input:
+    Resources:
+      MyLambdaFunction:
+        Type: AWS::Lambda::Function
+        Properties:
+          Handler: "index.handler"
+          Role: "arn:aws:iam::123456789012:role/LambdaRole"
+          Runtime: "python3.9"
+  expectations:
+    rules:
+      KINESIS_RETENTION_PERIOD_VALID: SKIP
+
+- name: Kinesis stream with invalid retention period, FAIL
+  input:
+    Resources:
+      MyStream:
+        Type: AWS::Kinesis::Stream
+        Properties:
+          RetentionPeriodHours: -1  # Invalid value
+  expectations:
+    rules:
+      KINESIS_RETENTION_PERIOD_VALID: FAIL

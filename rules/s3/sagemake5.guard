@@ -1,0 +1,10 @@
+let sagemaker_models = Resources.*[ Type == "AWS::SageMaker::Model" ]
+
+rule SAGEMAKER_MODEL_NETWORK_ISOLATION_ENABLED when %sagemaker_models !empty {
+    %sagemaker_models.Properties.EnableNetworkIsolation == true
+
+    <<
+    Violation: SageMaker model must have network isolation enabled to block inbound traffic.
+    Fix: Set `EnableNetworkIsolation: true` in your AWS::SageMaker::Model resource to prevent external network access.
+    >>
+}
