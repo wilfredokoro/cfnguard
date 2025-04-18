@@ -1,0 +1,11 @@
+let kinesis_streams = Resources.*[ Type == "AWS::Kinesis::Stream" ]
+
+rule KINESIS_RETENTION_PERIOD_VALID when %kinesis_streams !empty {
+  %kinesis_streams.Properties.RetentionPeriodHours exists
+  %kinesis_streams.Properties.RetentionPeriodHours >= 168
+
+  <<
+    Violation: Kinesis Data Stream has an inadequate retention period. It must be at least 168 hours (7 days).
+    Fix: Set 'RetentionPeriodHours' to 168 or more to ensure sufficient data availability for processing.
+  >>
+}

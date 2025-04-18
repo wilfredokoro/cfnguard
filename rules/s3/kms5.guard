@@ -1,0 +1,19 @@
+let kms_key = Resources.*[ Type == 'AWS::KMS::Key' ]
+
+rule KMS_KEY_PUBLIC_ACCESS when %kms_key !empty {
+  %kms_key.Properties.KeyPolicy.Statement[*] {
+    Effect == "Allow"
+    Principal.AWS == "*"
+    Action[*] == /kms:(Encrypt|Decrypt|ReEncrypt.*|GenerateDataKey.*|CreateGrant|ScheduleKeyDeletion|PutKeyPolicy)/ or
+    Action[*] == /kms:(DescribeKey|GetKeyPolicy|CreateAlias|GetKeyRotationStatus|List*)/
+   <<
+    Message: "KMS key policy allows public access. Avoid using Principal: '*' with Allow effect for KMS operations."
+    Severity: HIGH
+   >>
+  
+  }
+
+ 
+}
+
+    
