@@ -27,7 +27,7 @@
   input:
     Resources:
       MyELB:
-        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
         Properties:
           Subnets:
             - subnet-12345678
