@@ -23,50 +23,50 @@
     rules:
       ELB_SUBNETS_COUNT: FAIL
 
-# - name: ELB with 3 subnets, FAIL
-#   input:
-#     Resources:
-#       MyELB:
-#         Type: AWS::ElasticLoadBalancing::LoadBalancer
-#         Properties:
-#           Subnets:
-#             - subnet-12345678
-#             - subnet-87654321
-#             - subnet-11223344
-#   expectations:
-#     rules:
-#       ELB_SUBNETS_COUNT: FAIL
+- name: ELB with 3 subnets, FAIL
+  input:
+    Resources:
+      MyELB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          Subnets:
+            - subnet-12345678
+            - subnet-87654321
+            - subnet-11223344
+  expectations:
+    rules:
+      ELB_SUBNETS_COUNT: FAIL
 
-# - name: ELB with 0 subnets, FAIL
-#   input:
-#     Resources:
-#       MyELB:
-#         Type: AWS::ElasticLoadBalancing::LoadBalancer
-#         Properties:
-#           Subnets: []
-#   expectations:
-#     rules:
-#       ELB_SUBNETS_COUNT: FAIL
+- name: ELB with 0 subnets, FAIL
+  input:
+    Resources:
+      MyELB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          Subnets: []
+  expectations:
+    rules:
+      ELB_SUBNETS_COUNT: FAIL
 
-# - name: ELB with invalid subnet type, FAIL  
-#   input:
-#     Resources:
-#       MyELB:
-#         Type: AWS::ElasticLoadBalancing::LoadBalancer
-#         Properties:
-#           Subnets:
-#             - "subnet-12345678"  # String instead of list
-#   expectations:
-#     rules:
-#       ELB_SUBNETS_COUNT: FAIL
+- name: ELB with invalid subnet type, FAIL  
+  input:
+    Resources:
+      MyELB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          Subnets:
+            - "subnet-12345678"  # String instead of list
+  expectations:
+    rules:
+      ELB_SUBNETS_COUNT: FAIL
 
-# - name: ELB with missing subnets, FAIL
-#   input:
-#     Resources:
-#       MyELB:
-#         Type: AWS::ElasticLoadBalancing::LoadBalancer
-#         Properties:
-#           Subnets: null
-#   expectations:
-#     rules:
-#       ELB_SUBNETS_COUNT: FAIL
+- name: ELB with missing subnets, FAIL
+  input:
+    Resources:
+      MyELB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          Subnets: null
+  expectations:
+    rules:
+      ELB_SUBNETS_COUNT: FAIL
