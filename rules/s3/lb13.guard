@@ -2,7 +2,7 @@ let elbv2s = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
 
 rule ELB_SPANS_MINIMUM_TWO_AZS when %elbv2s !empty {
   %elbv2s.Properties.Subnets exists
-  length(%elbv2s.Properties.Subnets) >= 2
+  %elbv2s.Properties.Subnets.length >= 2
 
   <<
     Violation: Elastic Load Balancer must span at least 2 Availability Zones (i.e., 2 subnets).
