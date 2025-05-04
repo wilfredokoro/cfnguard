@@ -23,7 +23,7 @@
     rules:
       ELB_SUBNETS_COUNT: FAIL
 
-- name: ELB with 3 subnets, FAIL
+- name: ELB with 3 subnets, PASS
   input:
     Resources:
       MyELB:
@@ -37,7 +37,7 @@
     rules:
       ELB_SUBNETS_COUNT: FAIL
 
-- name: ELB with 0 subnets, FAIL
+- name: ELB with 0 subnets, PASS
   input:
     Resources:
       MyELB:
