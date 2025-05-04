@@ -1,18 +1,27 @@
-rule ELB_SUBNETS_COUNT {
-    let elbs = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
+# Rule: ELB_SUBNETS_COUNT
+# Description: Ensures load balancers span between 2-3 Availability Zones for high availability
+# Compliance: AWS Well-Architected Framework - Reliability Pillar
+let elbv2s = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
+let MIN_SUBNETS = 2
+let MAX_SUBNETS = 3
 
-    %elbs not empty
-
-    %elbs.Properties.Subnets not empty
-
-    %elbs.Properties.Subnets {
-        this is_list
-        this length >= 2
-        this length <= 3
+rule ELB_SUBNETS_COUNT when elbv2s != null {
+  check {
+    foreach elb in elbv2s {
+      when elb.Properties.Subnets exists {
+        check length(elb.Properties.Subnets) >= MIN_SUBNETS
+        check length(elb.Properties.Subnets) <= MAX_SUBNETS
+      }
+      when elb.Properties.SubnetMappings exists {
+        check length(elb.Properties.SubnetMappings) >= MIN_SUBNETS
+        check length(elb.Properties.SubnetMappings) <= MAX_SUBNETS
+      }
+      check elb.Properties.Subnets exists or elb.Properties.SubnetMappings exists
     }
+  }
 
-    <<
-        Violation: Load Balancer must span between 2 and 3 subnets (Availability Zones).
-        Fix: Use exactly 2 or 3 subnets under Properties.Subnets.
-    >>
+  <<
+    Violation: Load Balancer must span between 2 and 3 Availability Zones (subnets).
+    Fix: Ensure each LoadBalancer has between 2 and 3 subnets or subnet mappings.
+  >>
 }
