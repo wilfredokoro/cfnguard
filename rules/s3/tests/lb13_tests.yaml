@@ -37,7 +37,7 @@
     rules:
       ELB_SUBNETS_COUNT: PASS
 
-- name: ELB with 4 subnets, PASS  
+- name: ELB with 4 subnets, FAIL  
   input:
     Resources:
       MyELB:
@@ -50,7 +50,7 @@
             - subnet-22334455
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: PASS
+      ELB_SUBNETS_COUNT: FAIL
 - name: ELB with 0 subnets, FAIL
   input:
     Resources:
