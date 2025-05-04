@@ -7,8 +7,8 @@ rule ELB_SUBNETS_COUNT {
 
     %elbs.Properties.Subnets {
         this is_list
-        length(this) >= 2
-        length(this) <= 3
+        this length >= 2
+        this length <= 3
     }
 
     <<
