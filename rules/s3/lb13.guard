@@ -1,11 +1,12 @@
-#  AWS ELBv2 Subnets Count
 let elbv2s = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
 
 rule ELB_SUBNETS_COUNT when elbv2s != null {
-  check foreach elb in elbv2s {
-    check elb.Properties.Subnets exists
-    check length(elb.Properties.Subnets) >= 2
-    check length(elb.Properties.Subnets) <= 3
+  check {
+    foreach elb in elbv2s {
+      check elb.Properties.Subnets exists
+      check length(elb.Properties.Subnets) >= 2
+      check length(elb.Properties.Subnets) <= 3
+    }
   }
 
   <<
