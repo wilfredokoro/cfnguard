@@ -35,9 +35,9 @@
             - subnet-11223344
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: FAIL
+      ELB_SUBNETS_COUNT: PASS
 
-- name: ELB with 0 subnets, PASS
+- name: ELB with 0 subnets, FAIL
   input:
     Resources:
       MyELB:
