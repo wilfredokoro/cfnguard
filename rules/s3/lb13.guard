@@ -1,3 +1,4 @@
+#  AWS ELBv2 Subnets Count
 let elbv2s = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
 
 rule ELB_SUBNETS_COUNT when elbv2s != null {
