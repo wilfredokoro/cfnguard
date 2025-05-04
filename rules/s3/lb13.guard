@@ -1,16 +1,18 @@
 rule ELB_SUBNETS_COUNT {
-  let elbs = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
+    let elbs = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
 
-  check elbs exists
+    %elbs not empty
 
-  check foreach elb in elbs {
-    elb.Properties.Subnets exists
-    length(elb.Properties.Subnets) >= 2
-    length(elb.Properties.Subnets) <= 3
-  }
+    %elbs.Properties.Subnets not empty
 
-  <<
-    Violation: Load Balancer must span between 2 and 3 subnets (Availability Zones).
-    Fix: Use exactly 2 or 3 subnets under Properties.Subnets.
-  >>
+    %elbs.Properties.Subnets {
+        this is_list
+        length(this) >= 2
+        length(this) <= 3
+    }
+
+    <<
+        Violation: Load Balancer must span between 2 and 3 subnets (Availability Zones).
+        Fix: Use exactly 2 or 3 subnets under Properties.Subnets.
+    >>
 }
