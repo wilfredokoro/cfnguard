@@ -11,7 +11,7 @@
     rules:
       ELB_SUBNET_COUNT: PASS
 
-- name: ELB with 1 subnet, FAIL 
+- name: ELB with 1 subnet, FAIL
   input:
     Resources:
       MyELB:
@@ -23,18 +23,6 @@
     rules:
       ELB_SUBNET_COUNT: FAIL
 
-- name: ELB with 1 subnet, PASS 
-  input:
-    Resources:
-      MyELB:
-        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-        Properties:
-          Subnets:
-            - subnet-12345678
-  expectations:
-    rules:
-      ELB_SUBNET_COUNT: PASS
-
 - name: ELB with 3 subnets, PASS
   input:
     Resources:
@@ -42,13 +30,12 @@
         Type: AWS::ElasticLoadBalancingV2::LoadBalancer
         Properties:
           Subnets:
-            - subnet-12345678
-            - subnet-87654321
-            - subnet-11223344
+            - subnet-1
+            - subnet-2
+            - subnet-3
   expectations:
     rules:
       ELB_SUBNET_COUNT: PASS
-
 
 - name: ELB with 0 subnets, FAIL
   input:
@@ -61,25 +48,12 @@
     rules:
       ELB_SUBNET_COUNT: FAIL
 
-- name: ELB with invalid subnet type, FAIL  
-  input:
-    Resources:
-      MyELB:
-        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-        Properties:
-          Subnets:
-            - "subnet-12345678"  # String instead of list
-  expectations:
-    rules:
-      ELB_SUBNET_COUNT: FAIL
-
 - name: ELB with missing subnets, FAIL
   input:
     Resources:
       MyELB:
         Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-        Properties:
-          Subnets: null
+        Properties: {}
   expectations:
     rules:
       ELB_SUBNET_COUNT: FAIL
