@@ -1,0 +1,54 @@
+- name: CLB with defensive desync mode, PASS
+  input:
+    Resources:
+      MyCLB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          DesyncMitigationMode: defensive
+  expectations:
+    rules:
+      CLB_DESYNC_MODE_DEFENSIVE_OR_STRICTEST: PASS
+
+- name: CLB with strictest desync mode, PASS
+  input:
+    Resources:
+      MyCLB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          DesyncMitigationMode: strictest
+  expectations:
+    rules:
+      CLB_DESYNC_MODE_DEFENSIVE_OR_STRICTEST: PASS
+- name: CLB with strict desync mode, FAIL
+  input:
+    Resources:
+      MyCLB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          DesyncMitigationMode: strict
+  expectations:
+    rules:
+      CLB_DESYNC_MODE_DEFENSIVE_OR_STRICTEST: FAIL
+
+- name: CLB with no desync mode, FAIL
+  input:
+    Resources:
+      MyCLB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          DesyncMitigationMode: ''
+  expectations:
+    rules:
+      CLB_DESYNC_MODE_DEFENSIVE_OR_STRICTEST: FAIL
+- name: CLB with invalid desync mode, FAIL
+  input:
+    Resources:
+      MyCLB:
+        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Properties:
+          DesyncMitigationMode: invalid
+  expectations:
+    rules:
+      CLB_DESYNC_MODE_DEFENSIVE_OR_STRICTEST: FAIL
+
+

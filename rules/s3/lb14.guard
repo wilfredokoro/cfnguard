@@ -1,0 +1,11 @@
+let clbs = Resources.*[ Type == "AWS::ElasticLoadBalancing::LoadBalancer" ]
+
+rule CLB_DESYNC_MODE_DEFENSIVE_OR_STRICTEST when %clbs !empty {
+  %clbs.Properties.DesyncMitigationMode exists
+  %clbs.Properties.DesyncMitigationMode in ["defensive", "strictest"]
+
+  <<
+    Violation: Classic Load Balancer must be configured with 'desyncMode' set to either 'defensive' or 'strictest'.
+    Fix: Update the 'DesyncMitigationMode' property on your CLB to 'defensive' or 'strictest' for better security posture.
+  >>
+}

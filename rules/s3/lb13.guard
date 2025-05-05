@@ -1,0 +1,11 @@
+let elbs = Resources.*[ Type == "AWS::ElasticLoadBalancingV2::LoadBalancer" ]
+
+rule ELB_SUBNET_COUNT when %elbs !empty {
+  %elbs.Properties.Subnets[0] exists
+  %elbs.Properties.Subnets[1] exists
+
+  <<
+    Violation: ELB must use at least 2 subnets.
+    Fix: Add more subnets to ensure high availability across multiple AZs.
+  >>
+}
