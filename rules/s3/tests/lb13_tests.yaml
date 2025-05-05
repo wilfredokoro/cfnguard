@@ -9,7 +9,7 @@
             - subnet-87654321
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: PASS
+      ELB_SUBNET_COUNT: PASS
 
 - name: ELB with 1 subnet, FAIL 
   input:
@@ -21,7 +21,7 @@
             - subnet-12345678
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: FAIL
+      ELB_SUBNET_COUNT: FAIL
 
 - name: ELB with 1 subnet, PASS 
   input:
@@ -33,7 +33,7 @@
             - subnet-12345678
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: PASS
+      ELB_SUBNET_COUNT: PASS
 
 - name: ELB with 3 subnets, PASS
   input:
@@ -47,7 +47,7 @@
             - subnet-11223344
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: PASS
+      ELB_SUBNET_COUNT: PASS
 
 
 - name: ELB with 0 subnets, FAIL
@@ -59,7 +59,7 @@
           Subnets: []
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: FAIL
+      ELB_SUBNET_COUNT: FAIL
 
 - name: ELB with invalid subnet type, FAIL  
   input:
@@ -71,7 +71,7 @@
             - "subnet-12345678"  # String instead of list
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: FAIL
+      ELB_SUBNET_COUNT: FAIL
 
 - name: ELB with missing subnets, FAIL
   input:
@@ -82,4 +82,4 @@
           Subnets: null
   expectations:
     rules:
-      ELB_SUBNETS_COUNT: FAIL
+      ELB_SUBNET_COUNT: FAIL
