@@ -54,7 +54,7 @@
   input:
     Resources:
       MyELB:
-        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
         Properties:
           Subnets: []
   expectations:
@@ -65,7 +65,7 @@
   input:
     Resources:
       MyELB:
-        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
         Properties:
           Subnets:
             - "subnet-12345678"  # String instead of list
@@ -77,7 +77,7 @@
   input:
     Resources:
       MyELB:
-        Type: AWS::ElasticLoadBalancing::LoadBalancer
+        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
         Properties:
           Subnets: null
   expectations:
